@@ -1,7 +1,7 @@
 local main_conf_files = {
-	"globals.vim",
-	"options.vim",
-	"autocommands.vim",
+    "globals.vim",
+    "options.vim",
+    "autocommands.vim",
     "mappings.vim",
     "plugins.vim",
     "themes.vim",
