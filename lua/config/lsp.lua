@@ -8,7 +8,8 @@ local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr }
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
     vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
@@ -123,13 +124,17 @@ end
 
 if utils.executable("typescript-language-server") then
     lspconfig.tsserver.setup({
-        -- root_dir = nvim,
         on_attach = custom_attach,
         capabilities = capabilities,
     })
 else
     vim.notify("typescript-language-server not found!", "warn", { title = "Nvim-config LSP" })
 end
+
+-- lspconfig.angularls.setup({
+--     on_attach = custom_attach,
+--     capabilities = capabilities,
+-- })
 
 if utils.executable("svelte-language-server") then
     lspconfig.svelte.setup({
