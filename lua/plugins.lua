@@ -49,7 +49,7 @@ packer.startup({
         use { "hrsh7th/cmp-omni", after = "nvim-cmp" }
         use {"quangnguyen30192/cmp-nvim-ultisnips", after = {'nvim-cmp', 'ultisnips'}}
         use({ "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('config.lsp')]] })
-        
+
         -- if vim.g.is_mac then
             use({
                 "nvim-treesitter/nvim-treesitter",
@@ -89,6 +89,15 @@ packer.startup({
         use({"mhinz/vim-signify", event = 'BufEnter'})
 
         use {'kyazdani42/nvim-web-devicons'}
+
+        -- TODO: highlight
+        use {
+            "folke/todo-comments.nvim",
+            requires = "nvim-lua/plenary.nvim",
+            config = function ()
+                require"todo-comments".setup{}
+            end
+        }
 
         use {
             'norcalli/nvim-colorizer.lua',
@@ -183,7 +192,7 @@ packer.startup({
 
         -- The missing auto-completion for cmdline!
         use({"gelguy/wilder.nvim", opt = true, setup = [[vim.cmd('packadd wilder.nvim')]]})
-        
+
         -- file explorer
         use {
             'kyazdani42/nvim-tree.lua',
