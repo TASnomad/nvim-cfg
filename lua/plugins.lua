@@ -31,6 +31,10 @@ packer.startup({
 
         -- LSP
         use({ "onsails/lspkind-nvim", event = "VimEnter" })
+        use {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        }
 
         -- snippets
         use { 'L3MON4D3/LuaSnip' }
