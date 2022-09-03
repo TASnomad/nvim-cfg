@@ -4,6 +4,32 @@ local lsp = vim.lsp
 
 local utils = require("utils")
 
+require("mason").setup()
+require("mason-lspconfig").setup({
+    automatic_installation = {
+        "pylsp",
+        "rust-analyzer",
+        "gopls",
+        "tsserver",
+        "svelte",
+        "clangd",
+        "vimls",
+        "sumneko_lua",
+        "bashls",
+    },
+    ensured_installed = {
+        "pylsp",
+        "rust-analyzer",
+        "gopls",
+        "tsserver",
+        "svelte",
+        "clangd",
+        "vimls",
+        "sumneko_lua",
+        "bashls",
+    }
+})
+
 local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr }
@@ -80,135 +106,124 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
 
-if utils.executable('pylsp') then
-    lspconfig.pylsp.setup({
-        on_attach = custom_attach,
-        settings = {
-            pylsp = {
-                plugins = {
-                    pylint = { enabled = true, executable = "pylint" },
-                    pyflakes = { enabled = false },
-                    pycodestyle = { enabled = false },
-                    jedi_completion = { fuzzy = true },
-                    pyls_isort = { enabled = true },
-                    pylsp_mypy = { enabled = true },
-                },
+function lsp_command(path)
+    return string.format("%s/%s", vim.fn.stdpath("data"), path)
+end
+
+local lsp_commands = {
+    bash = lsp_command("/mason/packages/bash-language-server/node_modules/.bin/bash-language-server"),
+    c = lsp_command("/mason/packages/clangd/clangd/bin/clangd"),
+    go = lsp_command("/mason/packages/gopls/gopls"),
+    py = lsp_command("/mason/packages/python-lsp-server/venv/bin/pylsp"),
+    rust = lsp_command("/mason/packages/rust-analyzer/rust-analyzer"),
+    lua = lsp_command("/mason/packages/lua-language-server/lua-language-server"),
+    ts = lsp_command("/mason/packages/typescript-language-server/node_modules/.bin/typescript-language-server"),
+    vim = lsp_command("/mason/packages/vim-language-server/node_modules/.bin/vim-language-server"),
+    svelte = lsp_command("/mason/packages/svelte-language-server/node_modules/.bin/svelteserver"),
+}
+
+lspconfig.pylsp.setup({
+    cmd = { lsp_commands["py"] },
+    on_attach = custom_attach,
+    settings = {
+        pylsp = {
+            plugins = {
+                pylint = { enabled = true, executable = "pylint" },
+                pyflakes = { enabled = false },
+                pycodestyle = { enabled = false },
+                jedi_completion = { fuzzy = true },
+                pyls_isort = { enabled = true },
+                pylsp_mypy = { enabled = true },
             },
         },
-        flags = {
-            debounce_text_changes = 200,
-        },
-        capabilities = capabilities,
-    })
-else
-    vim.notify("pylsp not found!", 'warn', {title = 'Nvim-config LSP'})
-end
+    },
+    flags = {
+        debounce_text_changes = 200,
+    },
+    capabilities = capabilities,
+})
 
-if utils.executable("rust-analyzer") then
-    lspconfig.rust_analyzer.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-    })
-else
-    vim.notify("rust-analyzer not found!", "warn", { title = "Nvim-config LSP" })
-end
+lspconfig.rust_analyzer.setup({
+    cmd = { lsp_commands["rust"] },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+})
 
-if utils.executable("gopls") then
-    lspconfig.gopls.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-    })
-else
-    vim.notify("gopls not found!", "warn", { title = "Nvim-config LSP" })
-end
 
-if utils.executable("typescript-language-server") then
-    lspconfig.tsserver.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-    })
-else
-    vim.notify("typescript-language-server not found!", "warn", { title = "Nvim-config LSP" })
-end
+lspconfig.gopls.setup({
+    cmd = { lsp_commands["go"] },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+})
 
--- lspconfig.angularls.setup({
---     on_attach = custom_attach,
---     capabilities = capabilities,
--- })
+lspconfig.tsserver.setup({
+    cmd = { lsp_commands["ts"], "--stdio" },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+})
 
-if utils.executable("svelte-language-server") then
-    lspconfig.svelte.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-    })
-else
-    vim.notify("svelte-language-server not found", "warn", { title = "Nvim-config LSP" })
-end
+lspconfig.svelte.setup({
+    cmd = { lsp_commands["svelte"], "--stdio" },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+})
 
-if utils.executable('clangd') then
-    lspconfig.clangd.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-        filetypes = { "c", "cpp", "cc" },
-        flags = {
-            debounce_text_changes = 500,
-        },
-    })
-else
-    vim.notify("clangd not found!", 'warn', {title = 'Nvim-config LSP'})
-end
+lspconfig.clangd.setup({
+    cmd = { lsp_commands["c"] },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    filetypes = { "c", "cpp", "cc" },
+    flags = {
+        debounce_text_changes = 500,
+    },
+})
 
 -- set up vim-language-server
-if utils.executable('vim-language-server') then
-    lspconfig.vimls.setup({
-        on_attach = custom_attach,
-        flags = {
-            debounce_text_changes = 500,
-        },
-        capabilities = capabilities,
-    })
-else
-    vim.notify("vim-language-server not found!", 'warn', {title = 'Nvim-config LSP'})
-end
+lspconfig.vimls.setup({
+    cmd = { lsp_commands["vim"], "--stdio" },
+    on_attach = custom_attach,
+    flags = {
+        debounce_text_changes = 500,
+    },
+    capabilities = capabilities,
+})
 
 -- set up bash-language-server
-if utils.executable('bash-language-server') then
-    lspconfig.bashls.setup({
-        on_attach = custom_attach,
-        capabilities = capabilities,
-    })
-end
+lspconfig.bashls.setup({
+    cmd = { lsp_commands["bash"], "start" },
+    on_attach = custom_attach,
+    capabilities = capabilities,
+})
 
-if utils.executable("lua-language-server") then
-    -- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
-    lspconfig.sumneko_lua.setup({
-        on_attach = custom_attach,
-        settings = {
-            Lua = {
-                runtime = {
-                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                    version = "LuaJIT",
+-- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
+lspconfig.sumneko_lua.setup({
+    cmd = { lsp_commands["lua"] },
+    on_attach = custom_attach,
+    settings = {
+        Lua = {
+            runtime = {
+                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                version = "LuaJIT",
+            },
+            diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = { "vim" },
+            },
+            workspace = {
+                -- Make the server aware of Neovim runtime files,
+                -- see also https://github.com/sumneko/lua-language-server/wiki/Libraries#link-to-workspace .
+                -- Lua-dev.nvim also has similar settings for sumneko lua, https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua .
+                library = {
+                    fn.stdpath('data') .. "/site/pack/packer/opt/emmylua-nvim",
+                    fn.stdpath('config'),
                 },
-                diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = { "vim" },
-                },
-                workspace = {
-                    -- Make the server aware of Neovim runtime files,
-                    -- see also https://github.com/sumneko/lua-language-server/wiki/Libraries#link-to-workspace .
-                    -- Lua-dev.nvim also has similar settings for sumneko lua, https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua .
-                    library = {
-                        fn.stdpath('data') .. "/site/pack/packer/opt/emmylua-nvim",
-                        fn.stdpath('config'),
-                    },
-                    maxPreload = 2000,
-                    preloadFileSize = 50000,
-                },
+                maxPreload = 2000,
+                preloadFileSize = 50000,
             },
         },
-        capabilities = capabilities,
-    })
-end
+    },
+    capabilities = capabilities,
+})
 
 -- Change diagnostic signs.
 fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
