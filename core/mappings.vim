@@ -30,6 +30,9 @@ nnoremap <silent> <leader>ev :<C-U>tabnew $MYVIMRC <bar> tcd %:h<cr>
 nnoremap <silent> <leader>sv :<C-U>silent update $MYVIMRC <bar> source $MYVIMRC <bar>
       \ call v:lua.vim.notify("Nvim config successfully reloaded!", 'info', {'title': 'nvim-config'})<cr>
 
+" Show all todos inside a telescope
+nnoremap <silent> <leader>tv :TodoTelescope<cr>
+
 " Patching gx in order to open URLs without netrw
 nmap <silent>gx :sil !open <cWORD><CR>
 
