@@ -106,7 +106,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
 
-function lsp_command(path)
+local lsp_command = function(path)
     return string.format("%s/%s", vim.fn.stdpath("data"), path)
 end
 
@@ -116,6 +116,7 @@ local lsp_commands = {
     go = lsp_command("/mason/packages/gopls/gopls"),
     py = lsp_command("/mason/packages/python-lsp-server/venv/bin/pylsp"),
     rust = lsp_command("/mason/packages/rust-analyzer/rust-analyzer"),
+    json = lsp_command("/mason/packages/json-lsp/node_modules/.bin/vscode-json-language-server"),
     lua = lsp_command("/mason/packages/lua-language-server/lua-language-server"),
     ts = lsp_command("/mason/packages/typescript-language-server/node_modules/.bin/typescript-language-server"),
     vim = lsp_command("/mason/packages/vim-language-server/node_modules/.bin/vim-language-server"),
@@ -140,6 +141,12 @@ lspconfig.pylsp.setup({
     flags = {
         debounce_text_changes = 200,
     },
+    capabilities = capabilities,
+})
+
+lspconfig.jsonls.setup({
+    cmd = { lsp_commands["json"], "--stdio" },
+    on_attach = custom_attach,
     capabilities = capabilities,
 })
 
