@@ -16,6 +16,7 @@ require("mason-lspconfig").setup({
         "vimls",
         "sumneko_lua",
         "bashls",
+        "angularls",
     },
     ensured_installed = {
         "pylsp",
@@ -27,12 +28,17 @@ require("mason-lspconfig").setup({
         "vimls",
         "sumneko_lua",
         "bashls",
+        "angularls"
     }
 })
 
 local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr }
+
+    -- Using LSP as the handler for omnifunc
+    vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
     -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
@@ -111,6 +117,7 @@ local lsp_command = function(path)
 end
 
 local lsp_commands = {
+    angular = lsp_command("/mason//packages/angular-language-server/node_modules/.bin/ngserver"),
     bash = lsp_command("/mason/packages/bash-language-server/node_modules/.bin/bash-language-server"),
     c = lsp_command("/mason/packages/clangd/clangd/bin/clangd"),
     go = lsp_command("/mason/packages/gopls/gopls"),
@@ -121,6 +128,13 @@ local lsp_commands = {
     ts = lsp_command("/mason/packages/typescript-language-server/node_modules/.bin/typescript-language-server"),
     vim = lsp_command("/mason/packages/vim-language-server/node_modules/.bin/vim-language-server"),
     svelte = lsp_command("/mason/packages/svelte-language-server/node_modules/.bin/svelteserver"),
+}
+
+lspconfig.angularls.setup {
+    cmd = { lsp_commands["angular"], "--stdio", "--tstsProbeLocations", "", "--ngProbeLocations", "" },
+    on_new_config = function(new_config, new_root_dir)
+        new_config.cmd = { lsp_commands["angular"], "--stdio", "--tstsProbeLocations", "", "--ngProbeLocations", "" }
+    end
 }
 
 lspconfig.pylsp.setup({

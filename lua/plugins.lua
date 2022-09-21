@@ -201,6 +201,14 @@ packer.startup({
         }
 
         use { 'j-hui/fidget.nvim', after = 'nvim-lspconfig', config = [[require('config.fidget-nvim')]]}
+
+        use {
+            "akinsho/toggleterm.nvim",
+            tag = '*',
+            config = function()
+                require("toggleterm").setup()
+            end
+        }
     end,
     config = {
         max_jobs = 16,

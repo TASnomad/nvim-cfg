@@ -32,6 +32,11 @@ nnoremap <silent> <leader>sv :<C-U>silent update $MYVIMRC <bar> source $MYVIMRC 
 
 " Show all todos inside a telescope
 nnoremap <silent> <leader>tv :TodoTelescope<cr>
+" Toggle terminal
+nnoremap <silent> <leader>tt :call v:lua.require("config.term").term_toggle()<cr>
+
+" Toggle git client
+nnoremap <silent> <leader>gv :call v:lua.require("config.term").git_client_toggle()<cr>
 
 " Patching gx in order to open URLs without netrw
 nmap <silent>gx :sil !open <cWORD><CR>
@@ -59,7 +64,6 @@ xnoremap <silent> <A-j> :<C-U>call utils#MoveSelection('down')<CR>
 " Keep cursor position after yanking
 nnoremap y myy
 xnoremap y myy
-
 
 augroup restore_after_yank
   autocmd!
