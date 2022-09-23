@@ -33,6 +33,18 @@ nnoremap <silent> <leader>sv :<C-U>silent update $MYVIMRC <bar> source $MYVIMRC 
 " Show all todos inside a telescope
 nnoremap <silent> <leader>tv :TodoTelescope<cr>
 
+" Git mappings
+nnoremap <leader>ga :Git add %p:<cr><cr>
+nnoremap <leader>gs :Git<cr>
+nnoremap <leader>gc :Git commit -v -q<cr>
+nnoremap <leader>gd :Git diff<cr>
+nnoremap <leader>ge :Gedit<cr>
+nnoremap <leader>gr :Gread<cr>
+nnoremap <leader>gw :Gwrite<cr>
+nnoremap <leader>gps :Git push<cr>
+nnoremap <leader>gpl :Git pull<cr>
+nnoremap <leader>gv :Flogsplit<cr>
+
 " Patching gx in order to open URLs without netrw
 nmap <silent>gx :sil !open <cWORD><CR>
 
