@@ -159,9 +159,9 @@ packer.startup({
         use({ "sbdchd/neoformat", cmd = { "Neoformat" } })
 
         -- Git command inside vim
-        use({ "tpope/vim-fugitive", event = "User InGitRepo" })
+        use({ "tpope/vim-fugitive", opt = false })
         -- Better git log display
-        use({ "rbong/vim-flog", requires = "tpope/vim-fugitive", cmd = { "Flog" } })
+        use({ "rbong/vim-flog", requires = "tpope/vim-fugitive", cmd = { "Flog" }, opt = false })
         use({ "christoomey/vim-conflicted", requires = "tpope/vim-fugitive", cmd = {"Conflicted"}})
 
         use({ "kevinhwang91/nvim-bqf", ft = "qf", config = [[require('config.bqf')]] })
