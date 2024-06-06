@@ -185,6 +185,7 @@ local plugin_specs = {
             vim.cmd("colorscheme edge")
         end
     },
+    { 'wakatime/vim-wakatime', lazy = false },
 }
 
 local lazy_opts = {
