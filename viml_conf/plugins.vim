@@ -1,16 +1,16 @@
 scriptencoding utf-8
 
 " Plugin specification and lua stuff
-lua require('lua-init')
+lua require('plugin_specs')
 
 " Use short names for common plugin manager commands to simplify typing.
 " To use these shortcuts: first activate command line with `:`, then input the
 " short alias, e.g., `pi`, then press <space>, the alias will be expanded to
 " the full command automatically.
-call utils#Cabbrev('pi', 'PackerInstall')
-call utils#Cabbrev('pud', 'PackerUpdate')
-call utils#Cabbrev('pc', 'PackerClean')
-call utils#Cabbrev('ps', 'PackerSync')
+call utils#Cabbrev('pi', 'Lazy install')
+call utils#Cabbrev('pud', 'Lazy update')
+call utils#Cabbrev('pc', 'Lazy clean')
+call utils#Cabbrev('ps', 'Lazy sync')
 
 """""""""""""""""""""""""""""LeaderF settings"""""""""""""""""""""
 " Do not use cache file
@@ -66,22 +66,22 @@ let g:Lf_WorkingDirectoryMode = 'a'
 
 
 " Search files in popup window
-nnoremap <silent> <leader>ff :<C-U>Telescope find_files<CR>
+" nnoremap <silent> <leader>ff :<C-U>Telescope find_files<CR>
 
 " Grep project files in popup window
-nnoremap <silent> <leader>fg :<C-U>Telescope live_grep<CR>
+" nnoremap <silent> <leader>fg :<C-U>Telescope live_grep<CR>
 
 " Search vim help files
-nnoremap <silent> <leader>fh :<C-U>Telescope help_tags<CR>
+" nnoremap <silent> <leader>fh :<C-U>Telescope help_tags<CR>
 
 " Search tags in current buffer
-nnoremap <silent> <leader>ft :<C-U>Telescope tags<CR>
+" nnoremap <silent> <leader>ft :<C-U>Telescope tags<CR>
 
 " Switch buffers
-nnoremap <silent> <leader>fb :<C-U>Telescope buffers<CR>
+" nnoremap <silent> <leader>fb :<C-U>Telescope buffers<CR>
 
 " Search recent files
-nnoremap <silent> <leader>fr :<C-U>Leaderf mru --popup --absolute-path<CR>
+" nnoremap <silent> <leader>fr :<C-U>Leaderf mru --popup --absolute-path<CR>
 
 let g:Lf_PopupColorscheme = 'gruvbox_material'
 
@@ -93,7 +93,7 @@ let g:Lf_CommandMap = {'<C-J>': ['<C-N>'], '<C-K>': ['<C-P>']}
 let g:mundo_verbose_graph = 0
 let g:mundo_width = 80
 
-nnoremap <silent> <Space>u :MundoToggle<CR>
+" nnoremap <silent> <Space>u :MundoToggle<CR>
 
 """""""""""""""""""""""""vim-signify settings""""""""""""""""""""""""""""""
 " The VCS to use
@@ -159,7 +159,7 @@ function! s:wilder_init() abort
           \ 'apply_incsearch_fix': 0,
           \ }))
   catch /^Vim\%((\a\+)\)\=:E117/
-    echohl Error |echomsg "Wilder.nvim missing: run :PackerSync to fix."|echohl None
+    echohl Error |echomsg "Wilder.nvim missing"|echohl None
   endtry
 endfunction
 

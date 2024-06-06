@@ -1,12 +1,16 @@
+
 local fn = vim.fn
 local api = vim.api
 local lsp = vim.lsp
 
-local utils = require("utils")
+-- local utils = require("utils")
+
+require("neoconf").setup({ })
 
 require("mason").setup()
 require("mason-lspconfig").setup({
     automatic_installation = {
+        "asm_lsp",
         "pylsp",
         "rust-analyzer",
         "gopls",
@@ -14,11 +18,14 @@ require("mason-lspconfig").setup({
         "svelte",
         "clangd",
         "vimls",
-        "sumneko_lua",
+        "lua_ls",
+        -- "sumneko_lua",
         "bashls",
         "angularls",
+        "graphql-language-service-cli",
     },
     ensured_installed = {
+        "asm_lsp",
         "pylsp",
         "rust-analyzer",
         "gopls",
@@ -26,33 +33,49 @@ require("mason-lspconfig").setup({
         "svelte",
         "clangd",
         "vimls",
-        "sumneko_lua",
+        "lua_ls",
+        -- "sumneko_lua",
         "bashls",
-        "angularls"
+        "angularls",
+        "graphql-language-service-cli",
     }
 })
 
+local function merge(t1, t2)
+    local r = t1
+    for k, v in pairs(t2) do
+        if (type(v) == "table") and (type(r[k] or false) == "table") then
+            merge(r[k], t2[k])
+        else
+            r[k] = v
+        end
+    end
+    return r
+end
+
 local custom_attach = function(client, bufnr)
     -- Mappings.
-    local opts = { silent = true, buffer = bufnr }
+    local opts = { silent = true, buffer = bufnr, noremap = true }
 
     -- Using LSP as the handler for omnifunc
-    vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, merge(opts, { desc = "go to definition" }))
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, merge(opts, { desc = "go to declaration" }))
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
     -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<space><C-k>", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set("n", "<space><C-k>", vim.lsp.buf.signature_help, merge(opts, { desc = "Show signature" }))
     vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
     vim.keymap.set("n", "<space>wl", function() inspect(vim.lsp.buf.list_workspace_folders()) end, opts)
     vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, merge(opts, { desc = "Show references" }))
     vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", "<space>q", function() vim.diagnostic.setqflist({open = true}) end, opts)
-    vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "<space>q", function() vim.diagnostic.setqflist({open = true}) end, merge(opts, { desc = "Show diagnostics in quickfix list" }))
+    -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
+    vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
 
     api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,
@@ -78,16 +101,20 @@ local custom_attach = function(client, bufnr)
         end
     })
 
+    -- if client.server_capabilities.documentFormattingProvider then
+    --     vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
+    -- end
+
     -- Set some key bindings conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.document_formatting then
         vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
     end
-    if client.resolved_capabilities.document_range_formatting then
+    if client.server_capabilities.document_range_formatting then
         vim.keymap.set("x", "<space>f", vim.lsp.buf.range_formatting, opts)
     end
 
     -- The blow command will highlight the current variable and its usages in the buffer.
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.document_highlight then
         vim.cmd([[
         hi! link LspReferenceRead Visual
         hi! link LspReferenceText Visual
@@ -106,9 +133,9 @@ local custom_attach = function(client, bufnr)
     end
 end
 
-local capabilities = lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- local capabilities = lsp.protocol.make_client_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
 
@@ -117,18 +144,20 @@ local lsp_command = function(path)
 end
 
 local lsp_commands = {
-    angular = lsp_command("/mason//packages/angular-language-server/node_modules/.bin/ngserver"),
-    bash = lsp_command("/mason/packages/bash-language-server/node_modules/.bin/bash-language-server"),
-    c = lsp_command("/mason/packages/clangd/clangd/bin/clangd"),
-    go = lsp_command("/mason/packages/gopls/gopls"),
-    py = lsp_command("/mason/packages/python-lsp-server/venv/bin/pylsp"),
-    rust = lsp_command("/mason/packages/rust-analyzer/rust-analyzer"),
-    json = lsp_command("/mason/packages/json-lsp/node_modules/.bin/vscode-json-language-server"),
-    lua = lsp_command("/mason/packages/lua-language-server/lua-language-server"),
-    ts = lsp_command("/mason/packages/typescript-language-server/node_modules/.bin/typescript-language-server"),
-    vim = lsp_command("/mason/packages/vim-language-server/node_modules/.bin/vim-language-server"),
-    svelte = lsp_command("/mason/packages/svelte-language-server/node_modules/.bin/svelteserver"),
+    angular = lsp_command("mason/packages/angular-language-server/node_modules/.bin/ngserver"),
+    bash = lsp_command("mason/packages/bash-language-server/node_modules/.bin/bash-language-server"),
+    c = lsp_command("mason/packages/clangd/clangd/bin/clangd"),
+    go = lsp_command("mason/packages/gopls/gopls"),
+    py = lsp_command("mason/packages/python-lsp-server/venv/bin/pylsp"),
+    rust = lsp_command("mason/packages/rust-analyzer/rust-analyzer"),
+    json = lsp_command("mason/packages/json-lsp/node_modules/.bin/vscode-json-language-server"),
+    lua = lsp_command("mason/packages/lua-language-server/lua-language-server"),
+    ts = lsp_command("mason/packages/typescript-language-server/node_modules/.bin/typescript-language-server"),
+    vim = lsp_command("mason/packages/vim-language-server/node_modules/.bin/vim-language-server"),
+    svelte = lsp_command("mason/packages/svelte-language-server/node_modules/.bin/svelteserver"),
 }
+
+lspconfig.asm_lsp.setup { }
 
 lspconfig.angularls.setup {
     cmd = { lsp_commands["angular"], "--stdio", "--tstsProbeLocations", "", "--ngProbeLocations", "" },
@@ -216,8 +245,14 @@ lspconfig.bashls.setup({
     capabilities = capabilities,
 })
 
+lspconfig.graphql.setup({
+  cmd = { lsp_commands["graphql"] },
+  on_attach = custom_attach,
+})
+
 -- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
-lspconfig.sumneko_lua.setup({
+-- lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
     cmd = { lsp_commands["lua"] },
     on_attach = custom_attach,
     settings = {

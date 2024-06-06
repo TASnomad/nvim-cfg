@@ -1,4 +1,4 @@
-require("bufferline").setup({
+require("bufferline").setup {
   options = {
     numbers = "buffer_id",
     close_command = "bdelete! %d",
@@ -6,10 +6,10 @@ require("bufferline").setup({
     left_mouse_command = "buffer %d",
     middle_mouse_command = nil,
     indicator = {
-        icon = '▎', -- this should be omitted if indicator style is not 'icon'
-        style = 'icon',
+      icon = "▎", -- this should be omitted if indicator style is not 'icon'
+      style = "icon",
     },
-    buffer_close_icon = "",
+    buffer_close_icon = "",
     modified_icon = "●",
     close_icon = "",
     left_trunc_marker = "",
@@ -43,5 +43,4 @@ require("bufferline").setup({
     always_show_bufferline = true,
     sort_by = "id",
   },
-})
-
+}

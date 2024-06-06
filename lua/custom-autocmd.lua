@@ -59,7 +59,7 @@ api.nvim_create_autocmd({ "BufWritePre" }, {
   group = "auto_create_dir",
   callback = function(ctx)
     local dir = fn.fnamemodify(ctx.file, ":p:h")
-    utils.try_mkdir(dir)
+    utils.may_create_dir(dir)
   end
 })
 
