@@ -4,4 +4,4 @@ set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " expand tab to spaces
 
 " Format on save
-autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+autocmd BufWritePre <buffer> lua vim.lsp.buf.format()

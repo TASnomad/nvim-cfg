@@ -188,13 +188,13 @@ lspconfig.pylsp.setup({
 })
 
 lspconfig.jsonls.setup({
-    cmd = { lsp_commands["json"], "--stdio" },
+    -- cmd = { lsp_commands["json"], "--stdio" },
     on_attach = custom_attach,
     capabilities = capabilities,
 })
 
 lspconfig.rust_analyzer.setup({
-    cmd = { lsp_commands["rust"] },
+    -- cmd = { lsp_commands["rust"] },
     on_attach = custom_attach,
     capabilities = capabilities,
 })
@@ -206,11 +206,11 @@ lspconfig.gopls.setup({
     capabilities = capabilities,
 })
 
-lspconfig.tsserver.setup({
-    cmd = { lsp_commands["ts"], "--stdio" },
+lspconfig.tsserver.setup {
+    -- cmd = { lsp_commands["ts"], "--stdio" },
     on_attach = custom_attach,
     capabilities = capabilities,
-})
+}
 
 lspconfig.svelte.setup({
     cmd = { lsp_commands["svelte"], "--stdio" },

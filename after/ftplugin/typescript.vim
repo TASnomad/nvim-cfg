@@ -4,4 +4,5 @@ set shiftwidth=2    " number of spaces to use for autoindent
 set expandtab       " expand tab to spaces so that tabs are spaces
 
 " Format on save
-autocmd BufWritePre <buffer> silent Neoformat
+" autocmd BufWritePre <buffer> silent Neoformat
+autocmd BufWritePre <buffer> silent vim.lsp.buf.format()
