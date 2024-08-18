@@ -120,6 +120,7 @@ local plugin_specs = {
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-symbols.nvim",
+            "nvim-telescope/telescope-project.nvim"
         },
     },
     {

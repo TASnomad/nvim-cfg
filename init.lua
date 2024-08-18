@@ -15,6 +15,17 @@ if result_ver == false then
 	vim.api.nvim_err_writeln(msg)
 end
 
+-- Neovide config go here
+if vim.g.neovide then
+    vim.o.guifont = "JetBrainsMono Nerd Font Mono:h14"
+    vim.g.neovide_transparency = 1.0
+    vim.g.neovide_cursor_animation_length = 0.1
+    vim.g.neovide_cursor_trail_size = 0.3
+    vim.g.neovide_cursor_vfx_mode = ""
+    vim.g.neovide_cursor_vfx_particle_density = 10.0
+    vim.g.neovide_cursor_vfx_opacity = 150.0
+end
+
 local core_conf_files = {
     "globals.lua",
     "options.vim",
