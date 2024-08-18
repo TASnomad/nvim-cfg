@@ -148,16 +148,21 @@ function! s:wilder_init() abort
           \ ])
 
     let l:hl = wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}])
-    call wilder#set_option('renderer', wilder#popupmenu_renderer({
+    call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
           \ 'highlighter': wilder#basic_highlighter(),
-          \ 'max_height': 15,
           \ 'highlights': {
+          \   'border': 'normal',
           \   'accent': l:hl,
           \ },
+          \ 'border': 'rounded',
+          \ 'empty_message': wilder#popupmenu_empty_message_with_spinner(),
           \ 'left': [' ', wilder#popupmenu_devicons(),],
           \ 'right': [' ', wilder#popupmenu_scrollbar(),],
           \ 'apply_incsearch_fix': 0,
-          \ }))
+          \ 'min_width': '100%',
+          \ 'min_height': '15%',
+          \ 'pumblend': 20,
+          \ })))
   catch /^Vim\%((\a\+)\)\=:E117/
     echohl Error |echomsg "Wilder.nvim missing"|echohl None
   endtry
