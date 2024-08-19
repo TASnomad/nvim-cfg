@@ -85,6 +85,18 @@ keymap.set("t", "<Esc>", [[<c-\><c-n>]])
 --  Keep cursor position after yanking
 keymap.set({ "n", "x" }, "y", "myy")
 
+-- Neovide specific mappings
+if vim.g.neovide then
+    if vim.g.is_mac then
+        local keymapOpts = { noremap = true, silent = true }
+        -- Using system clipboard
+        keymap.set({ "n", "v" }, "<D-c>", '"+y<CR>', keymapOpts)
+        keymap.set({ "n", "v" }, "<D-v>", '"+p<CR>', keymapOpts)
+        keymap.set({ "t", "!" }, "<D-v>", "<C-R>+", keymapOpts)
+        keymap.set({ "n", "v" }, "<D-x>", '"+x', keymapOpts)
+    end
+end
+
 -- Move current line up and down
 keymap.set("n", "<A-k>", '<cmd>call utils#SwitchLine(line("."), "up")<cr>', { desc = "move line up" })
 keymap.set("n", "<A-j>", '<cmd>call utils#SwitchLine(line("."), "down")<cr>', { desc = "move line down" })

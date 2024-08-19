@@ -24,6 +24,9 @@ if vim.g.neovide then
     vim.g.neovide_cursor_vfx_mode = ""
     vim.g.neovide_cursor_vfx_particle_density = 10.0
     vim.g.neovide_cursor_vfx_opacity = 150.0
+    if vim.g.is_mac then
+        vim.g.neovide_input_use_logo = 1
+    end
 end
 
 local core_conf_files = {
