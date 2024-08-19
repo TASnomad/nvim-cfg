@@ -251,6 +251,23 @@ local plugin_specs = {
         end,
     },
     {
+        "tpope/vim-fugitive",
+        event = "User InGitRepo",
+        config = function()
+            require("config.fugitive")
+        end,
+    },
+    {
+        "rbong/vim-flog",
+        lazy = true,
+        cmd = { "Flog", "Flogsplit", "Floggit" },
+        dependencies = {
+            "tpope/vim-fugitive"
+        },
+    },
+    -- Better commit display
+    { "rhysd/committia.vim", lazy = true },
+    {
         "nvim-tree/nvim-tree.lua",
         keys = { "<space>op" },
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -294,6 +311,13 @@ local plugin_specs = {
         config = function()
             require("config.ident-blankline")
         end
+    },
+    {
+        "rcarriga/nvim-notify",
+        event = "VeryLazy",
+        config = function()
+            require("config.nvim-notify")
+        end,
     },
     {
         "sainnhe/edge",
