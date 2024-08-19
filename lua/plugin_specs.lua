@@ -120,8 +120,32 @@ local plugin_specs = {
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-symbols.nvim",
-            "nvim-telescope/telescope-project.nvim"
         },
+    },
+    {
+        "coffebar/neovim-project",
+        opts = {
+            projects = {
+                "~/projects/*",
+                "~/p*cts/*", -- glob pattern is supported
+                "~/projects/repos/*",
+                "~/.config/*",
+                "~/work/*",
+                "~/Documents/*",
+                "~/sandbox/*",
+            },
+        },
+        init = function ()
+            -- enable saving the state of plugins in the session
+            vim.opt.sessionoptions:append("globals") -- save global variables that start with an upper
+        end,
+        dependencies = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-telescope/telescope.nvim" },
+            { "Shatur/neovim-session-manager" },
+        },
+        lazy = false,
+        priority = 100,
     },
     {
         "folke/trouble.nvim",
