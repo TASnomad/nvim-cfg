@@ -269,7 +269,6 @@ local plugin_specs = {
     { "rhysd/committia.vim", lazy = true },
     {
         "nvim-tree/nvim-tree.lua",
-        keys = { "<space>op" },
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("config.nvim-tree")

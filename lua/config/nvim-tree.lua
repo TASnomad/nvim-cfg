@@ -104,7 +104,7 @@ nvim_tree.setup {
     },
 }
 
-keymap.set("n", "<space>op", require("nvim-tree.api").tree.toggle, {
+keymap.set("n", "<leader>op", require("nvim-tree.api").tree.toggle, {
   silent = true,
   desc = "toggle nvim-tree",
 })
