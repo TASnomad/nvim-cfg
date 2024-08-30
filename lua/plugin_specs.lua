@@ -148,6 +148,12 @@ local plugin_specs = {
         priority = 100,
     },
     {
+        "numToStr/FTerm.nvim",
+        config = function ()
+           require("config.fterm")
+        end
+    },
+    {
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
