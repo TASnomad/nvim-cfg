@@ -38,9 +38,9 @@ vim.g.mapleader = " "
 
 vim.g.vimsyn_embed = 'l'
 
---if not vim.g.is_mac then
-vim.cmd [[language en_US.utf-8]]
---end
+-- if not vim.g.is_mac then
+--vim.cmd("language en_US.UTF-8")
+-- end
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

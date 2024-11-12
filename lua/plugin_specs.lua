@@ -38,16 +38,20 @@ local plugin_specs = {
         "SirVer/ultisnips",
         event = "InsertEnter",
     },
-    {
-        "sbdchd/neoformat",
-        cmd = { "Neoformat" }
-    },
+    -- {
+    --   "sbdchd/neoformat",
+    --   cmd = { "Neoformat" }
+    -- },
     "folke/neoconf.nvim",
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     {
         "neovim/nvim-lspconfig",
-        event = { "BufRead", "BufNewFile" },
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "folke/neoconf.nvim",
+        },
+        event = { "BufReadPre", "BufNewFile" },
         config = function()
             require("config.lsp")
         end,
@@ -69,23 +73,23 @@ local plugin_specs = {
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
-        config = function ()
-           require("config.which-key")
+        config = function()
+            require("config.which-key")
         end,
     },
     -- TODO: highlight
     {
-      "folke/todo-comments.nvim",
-      config = function ()
-        require"todo-comments".setup({})
-      end,
-      dependencies = { "nvim-lua/plenary.nvim" },
+        "folke/todo-comments.nvim",
+        config = function()
+            require "todo-comments".setup({})
+        end,
+        dependencies = { "nvim-lua/plenary.nvim" },
     },
     -- Comment plugin
-    { "tpope/vim-commentary", event = "VeryLazy" },
+    { "tpope/vim-commentary",   event = "VeryLazy" },
     { "simnalamburt/vim-mundo", cmd = { "MundoToggle", "MundoShow" } },
     -- Automatic insertion and deletion of a pair of characters
-    { "Raimondi/delimitMate", event = "InsertEnter" },
+    { "Raimondi/delimitMate",   event = "InsertEnter" },
     "nvim-lua/plenary.nvim",
     -- The missing auto-completion for cmdline!
     {
@@ -94,7 +98,7 @@ local plugin_specs = {
     },
     { "nvim-tree/nvim-web-devicons", event = "VeryLazy" },
     -- Highlight URLs inside vim
-    { "itchyny/vim-highlighturl", event = "VeryLazy" },
+    { "itchyny/vim-highlighturl",    event = "VeryLazy" },
     {
         "akinsho/bufferline.nvim",
         event = { "BufEnter" },
@@ -122,35 +126,35 @@ local plugin_specs = {
             "nvim-telescope/telescope-symbols.nvim",
         },
     },
-    {
-        "coffebar/neovim-project",
-        opts = {
-            projects = {
-                "~/projects/*",
-                "~/p*cts/*", -- glob pattern is supported
-                "~/projects/repos/*",
-                "~/.config/*",
-                "~/work/*",
-                "~/Documents/*",
-                "~/sandbox/*",
-            },
-        },
-        init = function ()
-            -- enable saving the state of plugins in the session
-            vim.opt.sessionoptions:append("globals") -- save global variables that start with an upper
-        end,
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-            { "nvim-telescope/telescope.nvim" },
-            { "Shatur/neovim-session-manager" },
-        },
-        lazy = false,
-        priority = 100,
-    },
+    -- {
+    --     "coffebar/neovim-project",
+    --     opts = {
+    --         projects = {
+    --             "~/projects/*",
+    --             "~/p*cts/*", -- glob pattern is supported
+    --             "~/projects/repos/*",
+    --             "~/.config/*",
+    --             "~/work/*",
+    --             "~/Documents/*",
+    --             "~/sandbox/*",
+    --         },
+    --     },
+    --     init = function ()
+    --         -- enable saving the state of plugins in the session
+    --         vim.opt.sessionoptions:append("globals") -- save global variables that start with an upper
+    --     end,
+    --     dependencies = {
+    --         { "nvim-lua/plenary.nvim" },
+    --         { "nvim-telescope/telescope.nvim" },
+    --         { "Shatur/neovim-session-manager" },
+    --     },
+    --     lazy = false,
+    --     priority = 100,
+    -- },
     {
         "numToStr/FTerm.nvim",
-        config = function ()
-           require("config.fterm")
+        config = function()
+            require("config.fterm")
         end
     },
     {
@@ -192,8 +196,8 @@ local plugin_specs = {
                     }
                 },
                 preview_float = {
-                mode  = "diagnostics",
-                preview = {
+                    mode    = "diagnostics",
+                    preview = {
                         type = "float",
                         relative = "editor",
                         border = "rounded",
@@ -330,7 +334,7 @@ local plugin_specs = {
             vim.cmd("colorscheme edge")
         end
     },
-    { 'wakatime/vim-wakatime', lazy = false },
+    -- { 'wakatime/vim-wakatime', lazy = false },
 }
 
 local lazy_opts = {
