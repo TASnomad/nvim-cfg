@@ -1,10 +1,11 @@
 local fn = vim.fn
+
 local api = vim.api
 
 local utils = require("utils")
 
 function _G.inspect(item)
-    vim.print(item)
+  vim.print(item)
 end
 
 vim.g.is_win = (utils.has("win32") or utils.has("win64")) and true or false
@@ -47,7 +48,7 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_liststyle = 3
 
 if vim.g.is_win then
-    vim.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
+  vim.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
 end
 
 
