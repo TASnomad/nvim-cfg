@@ -56,7 +56,7 @@ local servers = {
     },
     bashls = {},
     graphql = {},
-    rubylsp = {},
+    ruby_lsp = {},
     jsonls = {},
 }
 
