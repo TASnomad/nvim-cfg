@@ -38,14 +38,21 @@ local servers = {
                 library = {
                     -- fn.stdpath('data') .. "/site/pack/packer/opt/emmylua-nvim",
                     fn.stdpath('config'),
-                    [fn.expand "$VIMRUNTIME/lua"] = true,
-                    [fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-                    [fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+                    fn.expand("$VIMRUNTIME/lua"),
+                    fn.expand("$VIMRUNTIME/lua/vim/lsp"),
+                    fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
                 },
                 maxPreload = 2000,
                 preloadFileSize = 50000,
             },
         },
+    },
+    nil_ls = {
+        ['nil'] = {
+            formatting = {
+                command = { 'alejandra' }
+            }
+        }
     },
     bashls = {},
     graphql = {},
@@ -69,8 +76,8 @@ local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr, noremap = true }
 
-    -- Using LSP as the handler for omnifunc
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    -- Using LSP as the handler for omnifunc (deprecated: automatically installed)
+    -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, merge(opts, { desc = "go to definition" }))
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, merge(opts, { desc = "go to declaration" }))
@@ -86,7 +93,7 @@ local custom_attach = function(client, bufnr)
     vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
     vim.keymap.set("n", "<space>q", function() vim.diagnostic.setqflist({ open = true }) end,
-    merge(opts, { desc = "Show diagnostics in quickfix list" }))
+        merge(opts, { desc = "Show diagnostics in quickfix list" }))
     -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
     vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
 
