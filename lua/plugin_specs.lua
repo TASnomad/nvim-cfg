@@ -19,7 +19,6 @@ local plugin_specs = {
     -- auto-completion engine
     {
         "hrsh7th/nvim-cmp",
-        -- event = 'InsertEnter',
         event = "VeryLazy",
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
@@ -38,10 +37,6 @@ local plugin_specs = {
         "SirVer/ultisnips",
         event = "InsertEnter",
     },
-    -- {
-    --   "sbdchd/neoformat",
-    --   cmd = { "Neoformat" }
-    -- },
     "folke/neoconf.nvim",
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
