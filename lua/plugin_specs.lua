@@ -269,14 +269,6 @@ local plugin_specs = {
             "sindrets/diffview.nvim", -- optional - Diff integration
         }
     },
-    -- {
-    --   "rbong/vim-flog",
-    --   lazy = true,
-    --   cmd = { "Flog", "Flogsplit", "Floggit" },
-    --   dependencies = {
-    --     "tpope/vim-fugitive"
-    --   },
-    -- },
     -- Better commit display
     { "rhysd/committia.vim", lazy = true },
     {
