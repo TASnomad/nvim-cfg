@@ -114,38 +114,12 @@ local plugin_specs = {
     },
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.6",
-        -- cmd = "Telescope",
+        tag = "0.1.8",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-symbols.nvim",
         },
     },
-    -- {
-    --     "coffebar/neovim-project",
-    --     opts = {
-    --         projects = {
-    --             "~/projects/*",
-    --             "~/p*cts/*", -- glob pattern is supported
-    --             "~/projects/repos/*",
-    --             "~/.config/*",
-    --             "~/work/*",
-    --             "~/Documents/*",
-    --             "~/sandbox/*",
-    --         },
-    --     },
-    --     init = function ()
-    --         -- enable saving the state of plugins in the session
-    --         vim.opt.sessionoptions:append("globals") -- save global variables that start with an upper
-    --     end,
-    --     dependencies = {
-    --         { "nvim-lua/plenary.nvim" },
-    --         { "nvim-telescope/telescope.nvim" },
-    --         { "Shatur/neovim-session-manager" },
-    --     },
-    --     lazy = false,
-    --     priority = 100,
-    -- },
     {
         "numToStr/FTerm.nvim",
         config = function()
@@ -165,11 +139,6 @@ local plugin_specs = {
                 },
             },
             modes = {
-                -- diagnostics = {
-                --     groups = {
-                --         { "filename", format = "{file_icon} {basename:Title} {count}" },
-                --     },
-                -- },
                 cascade = {
                     mode = "diagnostics",
                     filter = function(items)
