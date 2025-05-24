@@ -4,11 +4,6 @@ local lsp = vim.lsp
 
 local mason_lspconfig = require("mason-lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-vim.lsp.enable('biome')
-vim.lsp.enable('docker_compose_language_service')
-vim.lsp.enable('dockerls')
 
 local servers = {
     pylsp = {
@@ -23,8 +18,6 @@ local servers = {
             },
         }
     },
-    tl_ls = {},
-    vimls = {},
     lua_ls = {
         Lua = {
             runtime = {
@@ -36,15 +29,17 @@ local servers = {
                 globals = { "vim" },
             },
             workspace = {
+                -- TODO: do we need all this?
                 -- Make the server aware of Neovim runtime files,
                 -- see also https://github.com/sumneko/lua-language-server/wiki/Libraries#link-to-workspace .
                 -- Lua-dev.nvim also has similar settings for sumneko lua, https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua .
-                library = {
-                    fn.stdpath('config'),
-                    fn.expand("$VIMRUNTIME/lua"),
-                    fn.expand("$VIMRUNTIME/lua/vim/lsp"),
-                    fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
-                },
+                -- library = {
+                --     fn.stdpath('config'),
+                --     fn.expand("$VIMRUNTIME/lua"),
+                --     fn.expand("$VIMRUNTIME/lua/vim/lsp"),
+                --     fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
+                -- },
+                library = vim.api.nvim_get_runtime_file("", true),
                 maxPreload = 2000,
                 preloadFileSize = 50000,
             },
@@ -57,10 +52,16 @@ local servers = {
             }
         }
     },
+    dockerls = {},
+    docker_compose_language_service = {},
+    biome = {},
     bashls = {},
     graphql = {},
-    ruby_lsp = {},
+    -- ruby_lsp = {},
+    rust_analyzer = {},
     jsonls = {},
+    ts_ls = {},
+    vimls = {},
 }
 
 local function merge(t1, t2)
@@ -79,26 +80,37 @@ local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr, noremap = true }
 
-    -- Using LSP as the handler for omnifunc (deprecated: automatically installed)
-    -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, merge(opts, { desc = "go to definition" }))
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, merge(opts, { desc = "go to declaration" }))
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
     -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<space><C-k>", vim.lsp.buf.signature_help, merge(opts, { desc = "Show signature" }))
+    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, merge(opts, { desc = "Show signature" }))
     vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
     vim.keymap.set("n", "<space>wl", function() inspect(vim.lsp.buf.list_workspace_folders()) end, opts)
     vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "gr", vim.lsp.buf.references, merge(opts, { desc = "Show references" }))
-    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
-    vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", "<space>q", function() vim.diagnostic.setqflist({ open = true }) end,
+    vim.keymap.set("n", "gp", function()
+        vim.diagnostic.jump({ count = -1, float = true })
+    end, merge(opts, { desc = "Go to prev issue" }))
+    vim.keymap.set("n", "gn", function()
+        vim.diagnostic.jump({ count = 1, float = true })
+    end, merge(opts, { desc = "Go to next issue" }))
+    vim.keymap.set("n", "<leader>q", function() vim.diagnostic.setqflist({ open = true }) end,
         merge(opts, { desc = "Show diagnostics in quickfix list" }))
     -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
-    vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
+
+    if vim.lsp.inlay_hint then
+        vim.keymap.set('n', '<leader>L', function()
+            if vim.lsp.inlay_hint.is_enabled() then
+                vim.lsp.inlay_hint.enable(false, { bufnr })
+            else
+                vim.lsp.inlay_hint.enable(true, { bufnr })
+            end
+        end, merge(opts, { desc = "Toggle inlay hints" }))
+    end
 
     api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,
@@ -158,22 +170,22 @@ end
 
 
 require("neoconf").setup({})
-
 require("mason").setup()
+
 mason_lspconfig.setup({
-    automatic_installation = true,
-    ensured_installed = vim.tbl_keys(servers),
-    handlers = {
-        function(server_name)
-            require("lspconfig")[server_name].setup {
-                capabilities = capabilities,
-                on_attach = custom_attach,
-                settings = servers[server_name],
-                filetypes = (servers[server_name] or {}).filetypes,
-            }
-        end
-    }
+    automatic_enable = true,
+    ensure_installed = vim.tbl_keys(servers),
 })
+
+for k, v in pairs(servers) do
+    vim.lsp.config(k, {
+        capabilities = capabilities,
+        on_attach = custom_attach,
+        settings = v,
+        filetypes = (v or {}).filetypes,
+    })
+    vim.lsp.enable(k)
+end
 
 -- Change diagnostic signs.
 fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
@@ -187,16 +199,4 @@ vim.diagnostic.config({
     virtual_text = true,
     signs = true,
     severity_sort = true,
-})
-
--- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
---   underline = false,
---   virtual_text = false,
---   signs = true,
---   update_in_insert = false,
--- })
-
--- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
-lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
 })
