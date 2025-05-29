@@ -45,13 +45,6 @@ local servers = {
             },
         },
     },
-    nil_ls = {
-        ['nil'] = {
-            formatting = {
-                command = { 'alejandra' }
-            }
-        }
-    },
     dockerls = {},
     docker_compose_language_service = {},
     biome = {},
@@ -63,6 +56,18 @@ local servers = {
     ts_ls = {},
     vimls = {},
 }
+
+
+-- NOTE: only configuring nix LSP on nix machines
+if vim.fn.executable("nix-build") == 1 then
+    servers['nil_ls'] = {
+        ['nil'] = {
+            formatting = {
+                command = { 'alejandra' }
+            }
+        }
+    }
+end
 
 local function merge(t1, t2)
     local r = t1
