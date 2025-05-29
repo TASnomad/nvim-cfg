@@ -2,7 +2,7 @@ vim.loader.enable()
 
 local version = vim.version
 
--- Allowing all 0.10.x to 0.11 versions
+-- Allowing all 0.11.x versions
 local expected_ver = version.range("^0.11")
 local current_ver = version()
 
@@ -14,7 +14,7 @@ if result_ver == false then
     local msg = string.format("Expect nvim v[from '%s' - to: '%s'], but got %s instead. You're on your own!",
         ---@diagnostic disable-next-line: need-check-nil
         expected_ver.from, expected_ver.to, _v)
-    vim.api.nvim_err_writeln(msg)
+    vim.api.nvim_echo({ { msg } }, true, { err = true })
 end
 
 -- Neovide config go here

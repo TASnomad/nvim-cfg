@@ -1,7 +1,9 @@
+---@diagnostic disable: missing-fields
 local fterm = require("FTerm")
 
+-- TODO: figure out if we need specific options
 fterm.setup({
-    border =  "double",
+    border = "double",
     dimensions = {
         height = 0.9,
         width = 0.9,
