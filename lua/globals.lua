@@ -5,7 +5,7 @@ local api = vim.api
 local utils = require("utils")
 
 function _G.inspect(item)
-    vim.print(item)
+  vim.print(item)
 end
 
 vim.g.is_win = (utils.has("win32") or utils.has("win64")) and true or false
@@ -25,20 +25,23 @@ vim.g.did_install_default_menus = 1
 
 
 if utils.executable('python3') then
-    if vim.g.is_win then
-        vim.g.python3_host_prog = fn.substitute(fn.exepath("python3"), ".exe$", '', 'g')
-    else
-        vim.g.python3_host_prog = fn.exepath("python3")
-    end
+  if vim.g.is_win then
+    vim.g.python3_host_prog = fn.substitute(fn.exepath("python3"), ".exe$", '', 'g')
+  else
+    vim.g.python3_host_prog = fn.exepath("python3")
+  end
 else
-    api.nvim_echo({ { "Python3 executable not found! You must install Python3 and set its PATH correctly!" } }, true,
-        { err = true })
-    return
+  api.nvim_echo({ { "Python3 executable not found! You must install Python3 and set its PATH correctly!" } }, true,
+    { err = true })
+  return
 end
 
 vim.g.mapleader = " "
 
 vim.g.vimsyn_embed = 'l'
+
+vim.opt.spell = true
+vim.opt.spelllang = "en,cjk"
 
 -- if not vim.g.is_mac then
 --vim.cmd("language en_US.UTF-8")
@@ -49,7 +52,7 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_liststyle = 3
 
 if vim.g.is_win then
-    vim.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
+  vim.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
 end
 
 
