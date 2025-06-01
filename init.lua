@@ -17,10 +17,10 @@ if result_ver == false then
     vim.api.nvim_echo({ { msg } }, true, { err = true })
 end
 
--- Neovide config go here
+--  Config specific to neovide
 if vim.g.neovide then
     vim.o.guifont = "JetBrainsMono Nerd Font Mono:h14"
-    vim.g.neovide_transparency = 1.0
+    vim.g.neovide_opacity = 1.0
     vim.g.neovide_cursor_animation_length = 0.1
     vim.g.neovide_cursor_trail_size = 0.3
     vim.g.neovide_cursor_vfx_mode = ""
