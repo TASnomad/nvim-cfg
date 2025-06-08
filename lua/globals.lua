@@ -40,8 +40,6 @@ vim.g.mapleader = " "
 
 vim.g.vimsyn_embed = 'l'
 
-vim.opt.spell = true
-vim.opt.spelllang = "en,cjk"
 
 -- if not vim.g.is_mac then
 --vim.cmd("language en_US.UTF-8")

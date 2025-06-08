@@ -1,3 +1,4 @@
+-- FIXME: Remove or use this file
 local fn = vim.fn
 local api = vim.api
 

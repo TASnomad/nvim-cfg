@@ -33,7 +33,8 @@ end
 
 local core_conf_files = {
     "globals.lua",
-    "options.vim",
+    "options.lua",
+    -- "options.vim",
     "autocommands.vim",
     "mappings.lua",
     "plugins.vim",
