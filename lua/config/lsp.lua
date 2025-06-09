@@ -2,19 +2,15 @@ local fn = vim.fn
 local api = vim.api
 
 local mason_lspconfig = require("mason-lspconfig")
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.protocol.make_client_capabilities(),
+    require('cmp_nvim_lsp').default_capabilities()
+)
 
-capabilities.textDocument.completion.dynamicRegistration = true
-
-vim.lsp.config("*", {
-    capabilities = {
-        workspace = {
-            didChangeWatchedFiles = {
-                dynamicRegistration = true
-            }
-        }
-    }
-})
+if capabilities.textDocument.completion.dynamicRegistration == false then
+    capabilities.textDocument.completion.dynamicRegistration = true
+end
 
 local servers = {
     pylsp = {
