@@ -1,8 +1,8 @@
 require("bqf").setup {
     auto_enable = true,
-    auto_resize_height = false,
+    auto_resize_height = true,
     preview = {
-        border = {'┏', '━', '┓', '┃', '┛', '━', '┗', '┃'},
+        border = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' },
         should_preview_cb = function(bufnr, qwinid)
             local ret = true
             local bufname = vim.api.nvim_buf_get_name(bufnr)
@@ -22,6 +22,7 @@ require("bqf").setup {
         drop = 'o',
         openc = 'O',
         split = '<C-s>',
+        tabdrop = '<C-t>',
         tabc = '',
         ptogglemode = 'z,',
     },

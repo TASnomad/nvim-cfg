@@ -1,24 +1,3 @@
-" Do not use smart case in command line mode, extracted from https://vi.stackexchange.com/a/16511/15292.
-augroup dynamic_smartcase
-  autocmd!
-  autocmd CmdLineEnter : set nosmartcase
-  autocmd CmdLineLeave : set smartcase
-augroup END
-
-augroup term_settings
-  autocmd!
-  " Do not use number and relative number for terminal inside nvim
-  autocmd TermOpen * setlocal norelativenumber nonumber
-  " Go to insert mode by default to start typing command
-  autocmd TermOpen * startinsert
-augroup END
-
-" More accurate syntax highlighting? (see `:h syn-sync`)
-augroup accurate_syn_highlight
-  autocmd!
-  autocmd BufEnter * :syntax sync fromstart
-augroup END
-
 " Return to last cursor position when opening a file
 augroup resume_cursor_position
   autocmd!
@@ -40,12 +19,6 @@ function s:resume_cursor_position() abort
     execute "normal! g`\"zvzz"
   endif
 endfunction
-
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-augroup END
 
 " Define or override some highlight groups
 augroup custom_highlight
@@ -88,4 +61,4 @@ augroup LargeFile
 	autocmd BufReadPre * call s:handle_large_file()
 augroup END
 
-lua require("custom-autocmd")
+lua require("autocommands")
