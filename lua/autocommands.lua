@@ -125,3 +125,23 @@ vim.api.nvim_create_autocmd({ "FocusGained", "CursorHold" }, {
     end
   end
 })
+
+local large_file_group = vim.api.nvim_create_augroup('LargeFile', { clear = true })
+vim.api.nvim_create_autocmd({ "BufReadPre" }, {
+  pattern = '*',
+  group = large_file_group,
+  -- solution from: https://vi.stackexchange.com/a/169/15292
+  callback = function()
+    local large_fsize = 10485760 -- 10MB
+    local file = vim.fn.expand('<afile>')
+    local stat = vim.fn.getfsize(file)
+
+    if stat > large_fsize or stat == -2 then
+      vim.opt.eventignore:append { "all" }
+      vim.o.relativenumber = true
+      vim.cmd('setlocal noswapfile bufhidden=unload buftype=nowrite undolevels=-1')
+    else
+      vim.opt.eventignore:remove { "all", "relativenumber" }
+    end
+  end
+})
