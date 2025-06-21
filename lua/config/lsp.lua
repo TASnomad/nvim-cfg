@@ -62,6 +62,7 @@ local servers = {
     jsonls = {},
     ts_ls = {},
     vimls = {},
+    buf_ls = {},
 }
 
 
