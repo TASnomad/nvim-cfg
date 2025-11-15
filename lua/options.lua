@@ -205,3 +205,13 @@ vim.opt.diffopt:append {
 
 -- Do no wrap
 vim.o.wrap = false
+
+-- vim.treesitter fold setup
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+-- plugin/my_fold.vim setup
+vim.opt.foldenable = false
+vim.opt.foldtext = "CustomFoldText()"
+vim.opt_local.foldmethod = "expr"
+vim.opt_local.foldexpr = "GetFoldPosition(v:lnum)"
