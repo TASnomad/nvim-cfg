@@ -72,3 +72,11 @@ vim.g.loaded_matchparen = 1
 
 -- Disable sql omni completion, it is broken.
 vim.g.loaded_sql_completion = 1
+
+-- vim-mundo
+vim.g.mundo_verbose_graph = 0
+vim.g.mundo_width = 80
+
+-- vim-signify
+vim.g.signify_vcs_list = { "git" }
+vim.g.signify_sign_change = "~"

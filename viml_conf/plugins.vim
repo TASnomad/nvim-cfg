@@ -12,32 +12,6 @@ call utils#Cabbrev('pud', 'Lazy update')
 call utils#Cabbrev('pc', 'Lazy clean')
 call utils#Cabbrev('ps', 'Lazy sync')
 
-""""""""""""""""""""""""vim-mundo settings"""""""""""""""""""""""
-let g:mundo_verbose_graph = 0
-let g:mundo_width = 80
-
-"""""""""""""""""""""""""vim-signify settings""""""""""""""""""""""""""""""
-" The VCS to use
-let g:signify_vcs_list = [ 'git' ]
-
-" Change the sign for certain operations
-let g:signify_sign_change = '~'
-
-""""""""""""""""""""""""""""vim-matchup settings"""""""""""""""""""""""""""""
-" Improve performance
-let g:matchup_matchparen_deferred = 1
-let g:matchup_matchparen_timeout = 100
-let g:matchup_matchparen_insert_timeout = 30
-
-" Enhanced matching with matchup plugin
-let g:matchup_override_vimtex = 1
-
-" Whether to enable matching inside comment or string
-let g:matchup_delim_noskips = 0
-
-" Show offscreen match pair in popup window
-let g:matchup_matchparen_offscreen = {'method': 'popup'}
-
 """"""""""""""""""""""""""""""wilder.nvim settings""""""""""""""""""""""""""""""
 call timer_start(250, { -> s:wilder_init() })
 
