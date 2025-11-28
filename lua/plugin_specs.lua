@@ -104,7 +104,6 @@ local plugin_specs = {
     -- better UI for some nvim actions
     { "stevearc/dressing.nvim" },
     { "akinsho/git-conflict.nvim", version = "*", config = true },
-    "sindrets/diffview.nvim",
     {
         "kevinhwang91/nvim-bqf",
         ft = "qf",
@@ -239,7 +238,7 @@ local plugin_specs = {
         }
     },
     -- Better commit display
-    { "rhysd/committia.vim", lazy = true },
+    -- { "rhysd/committia.vim", lazy = true },
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },
