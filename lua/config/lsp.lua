@@ -63,6 +63,7 @@ local servers = {
     ts_ls = {},
     vimls = {},
     buf_ls = {},
+    clangd = {},
 }
 
 
