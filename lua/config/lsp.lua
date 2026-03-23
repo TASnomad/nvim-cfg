@@ -1,8 +1,9 @@
-local fn = vim.fn
-local api = vim.api
-
+local fn              = vim.fn
+local api             = vim.api
+local dap             = require("dap")
+local dapui           = require("dapui")
 local mason_lspconfig = require("mason-lspconfig")
-local capabilities = vim.tbl_deep_extend(
+local capabilities    = vim.tbl_deep_extend(
     "force",
     vim.lsp.protocol.make_client_capabilities(),
     require('cmp_nvim_lsp').default_capabilities()
@@ -125,6 +126,24 @@ local custom_attach = function(client, bufnr)
             end
         end, merge(opts, { desc = "Toggle inlay hints" }))
     end
+
+    -- Debugger
+    vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle debugger UI" })
+    vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+    vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
+    vim.keymap.set("n", "<leader>dsi", dap.step_into, { desc = "Step Into" })
+    vim.keymap.set("n", "<leader>dso", dap.step_over, { desc = "Step Over" })
+    vim.keymap.set("n", "<leader>dst", dap.step_out, { desc = "Step Out" })
+    vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Open REPL" })
+    vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Run Last" })
+    vim.keymap.set("n", "<leader>dq", function()
+        dap.terminate()
+        dapui.close()
+    end, { desc = "Terminate" })
+    vim.keymap.set("n", "<leader>db", dap.list_breakpoints, { desc = "List Breakpoints" })
+    vim.keymap.set("n", "<leader>de", function()
+        dap.set_exception_breakpoints({ "all" })
+    end, { desc = "Set Exception Breakpoints" })
 
     api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,

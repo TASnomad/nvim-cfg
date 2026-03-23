@@ -52,6 +52,18 @@ local plugin_specs = {
         end,
     },
     {
+        "mfussenegger/nvim-dap",
+        event = "VeryLazy",
+        dependencies = {
+            "jay-babu/mason-nvim-dap.nvim",
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+        },
+        config = function()
+            require("config.dap")
+        end
+    },
+    {
         "nvim-treesitter/nvim-treesitter",
         enabled = function()
             if vim.g.is_mac then
