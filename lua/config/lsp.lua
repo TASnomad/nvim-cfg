@@ -1,5 +1,3 @@
-local fn              = vim.fn
-local api             = vim.api
 local dap             = require("dap")
 local dapui           = require("dapui")
 local mason_lspconfig = require("mason-lspconfig")
@@ -37,16 +35,9 @@ local servers = {
                 globals = { "vim" },
             },
             workspace = {
-                -- TODO: do we need all this?
-                -- Make the server aware of Neovim runtime files,
                 -- see also https://github.com/sumneko/lua-language-server/wiki/Libraries#link-to-workspace .
                 -- Lua-dev.nvim also has similar settings for sumneko lua, https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua .
-                -- library = {
-                --     fn.stdpath('config'),
-                --     fn.expand("$VIMRUNTIME/lua"),
-                --     fn.expand("$VIMRUNTIME/lua/vim/lsp"),
-                --     fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy",
-                -- },
+                -- Make the server aware of Neovim runtime files,
                 library = vim.api.nvim_get_runtime_file("", true),
                 maxPreload = 2000,
                 preloadFileSize = 50000,
@@ -145,7 +136,7 @@ local custom_attach = function(client, bufnr)
         dap.set_exception_breakpoints({ "all" })
     end, { desc = "Set Exception Breakpoints" })
 
-    api.nvim_create_autocmd("CursorHold", {
+    vim.api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,
         callback = function()
             local float_opts = {
@@ -160,7 +151,7 @@ local custom_attach = function(client, bufnr)
                 vim.b.diagnostics_pos = { nil, nil }
             end
 
-            local cursor_pos = api.nvim_win_get_cursor(0)
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
             if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
                 vim.diagnostic.open_float(nil, float_opts)
             end
@@ -220,16 +211,61 @@ for k, v in pairs(servers) do
     vim.lsp.enable(k)
 end
 
--- Change diagnostic signs.
-fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
-fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
-fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
-fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-
 -- global config for diagnostic
 vim.diagnostic.config({
+    virtual_text = {
+        spacing = 4,
+        prefix = function(diagnostic)
+            local icons = {
+                [vim.diagnostic.severity.ERROR] = "●",
+                [vim.diagnostic.severity.WARN]  = "▲",
+                [vim.diagnostic.severity.INFO]  = "ℹ",
+                [vim.diagnostic.severity.HINT]  = "󰌶",
+            }
+            return icons[diagnostic.severity] or "■"
+        end,
+        format = function(diagnostic)
+            -- Simply showing message
+            -- return diagnostic.message
+            return string.format("%s [%s]", diagnostic.message, diagnostic.source)
+        end,
+        source = "if_many",
+        -- serverity = {
+        --     min = vim.diagnostic.severity.HINT,
+        -- }
+    },
+    -- Gutter signs
+    -- signs = true,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "●",
+            [vim.diagnostic.severity.WARN]  = "▲",
+            [vim.diagnostic.severity.INFO]  = "ℹ",
+            [vim.diagnostic.severity.HINT]  = "󰌶",
+        },
+    },
     underline = true,
-    virtual_text = true,
-    signs = true,
+    update_in_insert = false,
     severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true,
+        header = "",
+        prefix = "",
+        focusable = false
+    }
+})
+
+-- Line background highlights (the Error Lens signature look)
+vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#E04343", bg = "#3B1F1F", bold = false })
+vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#CCA82A", bg = "#2F2A1A" })
+vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#3794FF", bg = "#1A2535" })
+vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#1EB464", bg = "#1a2b22" })
+
+
+-- Optional: show float automatically on CursorHold
+vim.api.nvim_create_autocmd("CursorHold", {
+    callback = function()
+        vim.diagnostic.open_float(nil, { scope = "cursor", focus = false })
+    end,
 })

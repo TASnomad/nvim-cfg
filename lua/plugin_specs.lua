@@ -308,6 +308,23 @@ local plugin_specs = {
             vim.cmd("colorscheme edge")
         end
     },
+    {
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        config = function()
+            require("colorizer").setup({
+                filetypes = { "*" },
+                user_default_options = {
+                    hex                = { default = true },
+                    rgb                = { enable = true },
+                    hsl                = { enable = true },
+                    mode               = "virtualtext", -- or "background", "foreground", "underline"
+                    virtualtext        = "■",
+                    virtualtext_inline = true
+                }
+            })
+        end
+    }
     -- { 'wakatime/vim-wakatime', lazy = false },
 }
 
