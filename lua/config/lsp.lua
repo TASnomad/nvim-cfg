@@ -108,15 +108,15 @@ local custom_attach = function(client, bufnr)
     -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
 
-    vim.keymap.set("n", "<leader>ce", function()
-        vim.diagnostic.open_float({
-            border = "rounded",
-            source = true,
-            header = "",
-            prefix = "",
-            focusable = false
-        })
-    end, merge(opts, { desc = "Show all LSP diagnostics" }))
+    -- vim.keymap.set("n", "<leader>ce", function()
+    --     vim.diagnostic.open_float({
+    --         border = "rounded",
+    --         source = true,
+    --         header = "",
+    --         prefix = "",
+    --         focusable = false
+    --     })
+    -- end, merge(opts, { desc = "Show all LSP diagnostics" }))
 
     if vim.lsp.inlay_hint then
         vim.keymap.set('n', '<leader>L', function()
@@ -147,26 +147,34 @@ local custom_attach = function(client, bufnr)
     end, { desc = "Set Exception Breakpoints" })
 
     -- FIXME: Too much issues with lsp.hover, dropping automatic popup & using open_float manually instead
-    -- vim.api.nvim_create_autocmd("CursorHold", {
-    --     buffer = bufnr,
-    --     callback = function()
-    --         local float_opts = {
-    --             focusable = false,
-    --             close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-    --             border = "rounded",
-    --             source = "always",
-    --             prefix = " ",
-    --         }
-    --         if not vim.b.diagnostics_pos then
-    --             vim.b.diagnostics_pos = { nil, nil }
-    --         end
-    --         local cursor_pos = vim.api.nvim_win_get_cursor(0)
-    --         if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
-    --             vim.diagnostic.open_float(nil, float_opts)
-    --         end
-    --         vim.b.diagnostics_pos = cursor_pos
-    --     end
-    -- })
+    vim.api.nvim_create_autocmd("CursorHold", {
+        buffer = bufnr,
+        callback = function()
+            local float_opts = {
+                focusable = false,
+                close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+                border = "rounded",
+                source = "always",
+                prefix = " ",
+                scope = "cursor"
+            }
+            if not vim.b.diagnostics_pos then
+                vim.b.diagnostics_pos = { nil, nil }
+            end
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
+                local win_list = vim.fn.win_findbuf(bufnr)
+                for _, win in ipairs(win_list) do
+                    if vim.api.nvim_win_get_config(win).relative ~= "" then
+                        return -- Skipping, since we have a floating window already present
+                    end
+                end
+                vim.diagnostic.open_float(nil, float_opts)
+            end
+            vim.b.diagnostics_pos = cursor_pos
+        end
+    })
+    --
     -- if client.server_capabilities.documentFormattingProvider then
     --     vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
     -- end
@@ -254,7 +262,13 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     severity_sort = true,
-    float = false
+    float = {
+        border = "rounded",
+        source = true,
+        header = "",
+        prefix = "",
+        focusable = false
+    }
 })
 
 -- Line background highlights (the Error Lens signature look)
