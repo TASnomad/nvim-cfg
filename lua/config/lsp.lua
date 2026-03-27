@@ -88,9 +88,9 @@ local custom_attach = function(client, bufnr)
 
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, merge(opts, { desc = "go to definition" }))
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, merge(opts, { desc = "go to declaration" }))
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, merge(opts, { desc = "go to implementation" }))
     -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, merge(opts, { desc = "Show information" }))
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, merge(opts, { desc = "Show signature" }))
     vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
@@ -107,6 +107,16 @@ local custom_attach = function(client, bufnr)
         merge(opts, { desc = "Show diagnostics in quickfix list" }))
     -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
+
+    vim.keymap.set("n", "<leader>ce", function()
+        vim.diagnostic.open_float({
+            border = "rounded",
+            source = true,
+            header = "",
+            prefix = "",
+            focusable = false
+        })
+    end, merge(opts, { desc = "Show all LSP diagnostics" }))
 
     if vim.lsp.inlay_hint then
         vim.keymap.set('n', '<leader>L', function()
@@ -136,30 +146,27 @@ local custom_attach = function(client, bufnr)
         dap.set_exception_breakpoints({ "all" })
     end, { desc = "Set Exception Breakpoints" })
 
-    vim.api.nvim_create_autocmd("CursorHold", {
-        buffer = bufnr,
-        callback = function()
-            local float_opts = {
-                focusable = false,
-                close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-                border = "rounded",
-                source = "always",
-                prefix = " ",
-            }
-
-            if not vim.b.diagnostics_pos then
-                vim.b.diagnostics_pos = { nil, nil }
-            end
-
-            local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
-                vim.diagnostic.open_float(nil, float_opts)
-            end
-
-            vim.b.diagnostics_pos = cursor_pos
-        end
-    })
-
+    -- FIXME: Too much issues with lsp.hover, dropping automatic popup & using open_float manually instead
+    -- vim.api.nvim_create_autocmd("CursorHold", {
+    --     buffer = bufnr,
+    --     callback = function()
+    --         local float_opts = {
+    --             focusable = false,
+    --             close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+    --             border = "rounded",
+    --             source = "always",
+    --             prefix = " ",
+    --         }
+    --         if not vim.b.diagnostics_pos then
+    --             vim.b.diagnostics_pos = { nil, nil }
+    --         end
+    --         local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    --         if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
+    --             vim.diagnostic.open_float(nil, float_opts)
+    --         end
+    --         vim.b.diagnostics_pos = cursor_pos
+    --     end
+    -- })
     -- if client.server_capabilities.documentFormattingProvider then
     --     vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
     -- end
@@ -247,13 +254,7 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     severity_sort = true,
-    float = {
-        border = "rounded",
-        source = true,
-        header = "",
-        prefix = "",
-        focusable = false
-    }
+    float = false
 })
 
 -- Line background highlights (the Error Lens signature look)
@@ -261,11 +262,3 @@ vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#E04343", bg = "#3B
 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#CCA82A", bg = "#2F2A1A" })
 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#3794FF", bg = "#1A2535" })
 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#1EB464", bg = "#1a2b22" })
-
-
--- Optional: show float automatically on CursorHold
-vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function()
-        vim.diagnostic.open_float(nil, { scope = "cursor", focus = false })
-    end,
-})

@@ -29,6 +29,7 @@ if vim.g.neovide then
     if vim.g.is_mac then
         vim.g.neovide_input_use_logo = 1
     end
+    vim.opt.clipboard = "unnamed,unnamedplus"
 end
 
 local core_conf_files = {
