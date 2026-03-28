@@ -150,6 +150,7 @@ function! utils#iso_time(timestamp) abort
   return strftime('%Y-%m-%d %H:%M:%S%z')
 endfunction
 
+" TODO: not used, should be removed
 " Check if we are inside a Git repo.
 function! utils#Inside_git_repo() abort
   let res = system('git rev-parse --is-inside-work-tree')
@@ -164,6 +165,7 @@ function! utils#Inside_git_repo() abort
   endif
 endfunction
 
+" TODO: not used, should be removed
 function! utils#GetGitBranch()
   let l:res = systemlist('git rev-parse --abbrev-ref HEAD')[0]
   if match(l:res, 'fatal') != -1
@@ -199,6 +201,7 @@ function! utils#MultiEdit(patterns) abort
   endfor
 endfunction
 
+" TODO: not used, should be removed
 function! utils#add_pack(name) abort
   let l:status = v:true
   try

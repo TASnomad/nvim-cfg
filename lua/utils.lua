@@ -42,6 +42,7 @@ function M.rand_int(low, high)
   return math.random(low, high)
 end
 
+-- TODO: not used, should be removed
 --- Select a random element from a sequence/list.
 --- @seq: the sequence to choose an element
 function M.rand_element(seq)
@@ -50,6 +51,7 @@ function M.rand_element(seq)
   return seq[idx]
 end
 
+-- TODO: not used, should be removed
 function M.add_pack(name)
   local status, error = pcall(vim.cmd, "packadd " .. name)
 

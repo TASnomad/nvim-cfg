@@ -146,7 +146,6 @@ local custom_attach = function(client, bufnr)
         dap.set_exception_breakpoints({ "all" })
     end, { desc = "Set Exception Breakpoints" })
 
-    -- FIXME: Too much issues with lsp.hover, dropping automatic popup & using open_float manually instead
     vim.api.nvim_create_autocmd("CursorHold", {
         buffer = bufnr,
         callback = function()

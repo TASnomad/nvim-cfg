@@ -83,18 +83,6 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     end
 })
 
--- TODO: remove this autocmd as we use lazy instead of packer
--- Auto-generate packer_compiled.lua file
--- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
---   pattern = "*/nvim/lua/plugins.lua",
---   group = vim.api.nvim_create_augroup("packer_auto_compile", { clear = true }),
---   callback = function(ctx)
---     local cmd = "source " .. ctx.file
---     vim.cmd(cmd)
---     vim.cmd("PackerCompile")
---   end
--- })
-
 -- Auto-create directory when saving a file, in case some intermediate directory does not exist
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     pattern = "*",

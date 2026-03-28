@@ -1,9 +1,9 @@
 -- Change fillchars for folding, vertical split, end of buffer, and message separator
 vim.opt.fillchars = {
-    fold = " ",
-    vert = "│",
-    eob = " ",
-    msgsep = "‾"
+  fold = " ",
+  vert = "│",
+  eob = " ",
+  msgsep = "‾"
 }
 
 -- Split window below/right when creating horizontal/vertical windows
@@ -19,7 +19,7 @@ vim.o.updatetime = 500
 -- Clipboard settings, always use clipboard for all delete, yank, change, put
 -- operation, see https://stackoverflow.com/q/30691466/6064933
 if vim.fn.empty(vim.fn['provider#clipboard#Executable']()) == 0 then
-    vim.o.clipboard = "unnamedplus"
+  vim.o.clipboard = "unnamedplus"
 end
 
 -- Disable creating swapfiles, see https://stackoverflow.com/q/821902/6064933
@@ -72,14 +72,14 @@ vim.o.smartcase = true
 vim.opt.fileencoding = "utf-8"
 vim.o.fileencodings = ""
 vim.opt.fileencodings:append {
-    "ucs-bom",
-    "utf-8",
-    "cp936",
-    "gb18030",
-    "big5",
-    "euc-jp",
-    "euc-kr",
-    "latin1"
+  "ucs-bom",
+  "utf-8",
+  "cp936",
+  "gb18030",
+  "big5",
+  "euc-jp",
+  "euc-kr",
+  "latin1"
 }
 
 -- Break line at predefined characters
@@ -109,10 +109,10 @@ vim.o.history = 500
 
 -- Use list mode and customized listchars
 vim.opt.listchars = {
-    tab = "▸ ",
-    extends = "❯",
-    precedes = "❮",
-    nbsp = "␣"
+  tab = "▸ ",
+  extends = "❯",
+  precedes = "❮",
+  nbsp = "␣"
 }
 
 vim.o.title = true
@@ -173,8 +173,8 @@ vim.o.startofline = false
 
 -- External program to use for grep command
 if vim.fn.executable('rg') == 1 then
-    vim.o.grepprg = 'rg --vimgrep --no-heading --smart-case'
-    vim.o.grepformat = '%f:%l:%c:%m'
+  vim.o.grepprg = 'rg --vimgrep --no-heading --smart-case'
+  vim.o.grepformat = '%f:%l:%c:%m'
 end
 
 -- Enable true color support. Do not set this option if your terminal does not
@@ -194,13 +194,13 @@ vim.opt.isfname:remove { "=", "," }
 -- Diff options
 vim.o.diffopt = ""
 vim.opt.diffopt:append {
-    "vertical",  -- show diff in vertical position
-    "filler",    -- show filler for deleted lines
-    "closeoff",  -- turn off diff when one file window is closed
-    "context:3", -- context for diff
-    "internal",
-    "indent-heuristic",
-    "algorithm:histogram"
+  "vertical",    -- show diff in vertical position
+  "filler",      -- show filler for deleted lines
+  "closeoff",    -- turn off diff when one file window is closed
+  "context:3",   -- context for diff
+  "internal",
+  "indent-heuristic",
+  "algorithm:histogram"
 }
 
 -- Do no wrap

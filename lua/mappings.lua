@@ -20,61 +20,61 @@ keymap.set("x", "<", "<gv")
 keymap.set("x", ">", ">gv")
 
 keymap.set("n", "<leader>ev", "<cmd>tabnew $MYVIMRC  <bar> tcd %:h<cr>", {
-    silent = true,
-    desc = "Open nvim init.lua file"
+  silent = true,
+  desc = "Open nvim init.lua file"
 })
 
 keymap.set("n", "gx", "<cmd>:sil !open <cWORD><cr>", {
-    silent = true,
-    noremap = false
+  silent = true,
+  noremap = false
 })
 
 keymap.set("n", "<leader>bk", ":bd<cr>", {
-    silent = true,
+  silent = true,
 })
 
 keymap.set("n", "<leader>sv", function()
-    vim.cmd([[
+  vim.cmd([[
         update $MYVIMRC
         source $MYVIMRC
     ]])
-    vim.notify("Nvim config reloaded!", vim.log.levels.INFO, { title = "nvim-config" })
+  vim.notify("Nvim config reloaded!", vim.log.levels.INFO, { title = "nvim-config" })
 end, {
-    silent = true,
-    desc = "Reload nvim config"
+  silent = true,
+  desc = "Reload nvim config"
 })
 
 keymap.set("n", "<space>o", "printf('m`%so<ESC>``', v:count1)", {
-    expr = true,
-    desc = "Insert line below"
+  expr = true,
+  desc = "Insert line below"
 })
 
 keymap.set("n", "<space>O", "printf('m`%sO<ESC>``', v:count1)", {
-    expr = true,
-    desc = "Insert line above"
+  expr = true,
+  desc = "Insert line above"
 })
 
 -- Reselect the text that has just been pasted, see also https://stackoverflow.com/a/4317090/6064933.
 keymap.set("n", "<leader>v", "printf('`[%s`]', getregtype()[0])", {
-    expr = true,
-    desc = "reselect last pasted area",
+  expr = true,
+  desc = "reselect last pasted area",
 })
 
 -- Always use very magic mode for searching
 keymap.set("n", "/", [[/\v]], {
-    desc = "Search in open buffers"
+  desc = "Search in open buffers"
 })
 
 -- Close location list or quickfix list if they are present, see https://superuser.com/q/355325/736190
 keymap.set("n", [[\x]], "<cmd>windo lclose <bar> cclose <cr>", {
-    silent = true,
-    desc = "close qf and location list",
+  silent = true,
+  desc = "close qf and location list",
 })
 
 -- Delete a buffer, without closing the window, see https://stackoverflow.com/q/4465095/6064933
 keymap.set("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr>", {
-    silent = true,
-    desc = "delete buffer",
+  silent = true,
+  desc = "delete buffer",
 })
 
 -- Use Esc to quit builtin terminal
@@ -85,14 +85,14 @@ keymap.set({ "n", "x" }, "y", "myy")
 
 -- Neovide specific mappings
 if vim.g.neovide then
-    if vim.g.is_mac then
-        local keymapOpts = { noremap = true, silent = true }
-        -- Using system clipboard
-        keymap.set({ "n", "v" }, "<D-c>", '"+y<CR>', keymapOpts)
-        keymap.set({ "n", "v" }, "<D-v>", '"+p<CR>', keymapOpts)
-        keymap.set({ "t", "!" }, "<D-v>", "<C-R>+", keymapOpts)
-        keymap.set({ "n", "v" }, "<D-x>", '"+x', keymapOpts)
-    end
+  if vim.g.is_mac then
+    local keymapOpts = { noremap = true, silent = true }
+    -- Using system clipboard
+    keymap.set({ "n", "v" }, "<D-c>", '"+y<CR>', keymapOpts)
+    keymap.set({ "n", "v" }, "<D-v>", '"+p<CR>', keymapOpts)
+    keymap.set({ "t", "!" }, "<D-v>", "<C-R>+", keymapOpts)
+    keymap.set({ "n", "v" }, "<D-x>", '"+x', keymapOpts)
+  end
 end
 
 -- Move current line up and down
@@ -105,44 +105,44 @@ keymap.set("x", "<A-k>", '<cmd>call utils#MoveSelection("up")<cr>', { desc = "mo
 keymap.set("x", "<A-j>", '<cmd>call utils#MoveSelection("down")<cr>', { desc = "move selection down" })
 
 keymap.set("n", "<leader>u", "<cmd>MundoToggle<cr>", {
-    silent = true,
-    desc = "Interactive mundo"
+  silent = true,
+  desc = "Interactive mundo"
 })
 
 keymap.set("n", "<leader>ff", function() require('telescope.builtin').find_files() end, {
-    desc = "Search files"
+  desc = "Search files"
 })
 
 keymap.set("n", "<leader>fg", function() require('telescope.builtin').live_grep() end, {
-    desc = "Grep search"
+  desc = "Grep search"
 })
 
 keymap.set("n", "<leader>fh", function() require('telescope.builtin').help_tags() end, {
-    desc = "Search vim in help files"
+  desc = "Search vim in help files"
 })
 
 keymap.set("n", "<leader>ft", function() require('telescope.builtin').tags() end, {
-    desc = "Search tags in current buffer"
+  desc = "Search tags in current buffer"
 })
 
 keymap.set("n", "<leader>fb", function() require('telescope.builtin').buffers() end, {
-    desc = "Search buffers"
+  desc = "Search buffers"
 })
 
 keymap.set("n", "<leader>fr", function() require('telescope.builtin').oldfiles() end, {
-    desc = "Search recent files"
+  desc = "Search recent files"
 })
 
 keymap.set("n", "<leader>tv", "<cmd>TodoTrouble<cr>", {
-    desc = "List all TODOs"
+  desc = "List all TODOs"
 })
 
 keymap.set('n', "<leader>pp", "<cmd>Telescope neovim-project discover<cr>", {
-    desc = "List all projects found"
+  desc = "List all projects found"
 })
 
 keymap.set('n', "<leader>pr", "<cmd>Telescope neovim-project<cr>", {
-    desc = "List recent projects"
+  desc = "List recent projects"
 })
 
 -- keymap.set("n", "<leader>xx", function() require("trouble").toggle() end, {
