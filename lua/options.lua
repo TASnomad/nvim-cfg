@@ -19,7 +19,9 @@ vim.o.updatetime = 500
 -- Clipboard settings, always use clipboard for all delete, yank, change, put
 -- operation, see https://stackoverflow.com/q/30691466/6064933
 if vim.fn.empty(vim.fn['provider#clipboard#Executable']()) == 0 then
-    vim.o.clipboard = "unnamedplus"
+    vim.schedule(function()
+        vim.o.clipboard = "unnamedplus"
+    end)
 end
 
 -- Disable creating swapfiles, see https://stackoverflow.com/q/821902/6064933
