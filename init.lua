@@ -37,9 +37,9 @@ end
 local core_conf_files = {
     "globals.lua",
     "options.lua",
-    "autocommands.vim",
+    "autocommands.lua",
     "mappings.lua",
-    "plugins.vim",
+    "plugins.lua",
 }
 
 local vim_conf_dir = vim.fn.stdpath("config") .. "/viml_conf"

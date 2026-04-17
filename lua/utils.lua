@@ -2,6 +2,17 @@ local fn = vim.fn
 
 local M = {}
 
+local function single_quote(str)
+  return "'" .. str:gsub("'", "''") .. "'"
+end
+
+function M.cabbrev(key, value)
+  vim.cmd(string.format(
+    "cabbrev <expr> %s (getcmdtype() == ':' && getcmdpos() <= %d) ? %s : %s",
+    key, 1 + #key, single_quote(value), single_quote(key)
+  ))
+end
+
 function M.executable(name)
   if fn.executable(name) > 0 then
     return true

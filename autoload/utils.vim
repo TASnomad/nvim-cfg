@@ -1,6 +1,7 @@
 " Create command alias safely, see https://stackoverflow.com/q/3878692/6064933
 " The following two functions are taken from answer below on SO:
 " https://stackoverflow.com/a/10708687/6064933
+" FIXME: deprecated
 function! utils#Cabbrev(key, value) abort
   execute printf('cabbrev <expr> %s (getcmdtype() == ":" && getcmdpos() <= %d) ? %s : %s',
         \ a:key, 1+len(a:key), <SID>Single_quote(a:value), <SID>Single_quote(a:key))
@@ -13,6 +14,7 @@ endfunction
 " Check the syntax group in the current cursor position, see
 " https://stackoverflow.com/q/9464844/6064933 and
 " https://jordanelver.co.uk/blog/2015/05/27/working-with-vim-colorschemes/
+" FIXME: deprecated
 function! utils#SynGroup() abort
   if !exists('*synstack')
     return
@@ -25,59 +27,6 @@ endfunction
 function! utils#HasColorscheme(name) abort
   let l:pat = printf('colors/%s.vim', a:name)
   return !empty(globpath(&runtimepath, l:pat))
-endfunction
-
-" Generate random integers in the range [Low, High] in pure vim script,
-" adapted from https://stackoverflow.com/a/12739441/6064933
-function! utils#RandInt(Low, High) abort
-  " Use lua to generate random int. It is faster. Ref: https://stackoverflow.com/a/20157671/6064933
-  call v:lua.math.randomseed(localtime())
-  return v:lua.math.random(a:Low, a:High)
-endfunction
-
-" Selection a random element from a sequence/list
-function! utils#RandElement(seq) abort
-  let l:idx = utils#RandInt(0, len(a:seq)-1)
-
-  return a:seq[l:idx]
-endfunction
-
-" Custom fold expr, adapted from https://vi.stackexchange.com/a/9094/15292
-function! utils#VimFolds(lnum) abort
-  " get content of current line and the line below
-  let l:cur_line = getline(a:lnum)
-  let l:next_line = getline(a:lnum+1)
-
-  if l:cur_line =~# '^"{'
-    return '>' . (matchend(l:cur_line, '"{*') - 1)
-  endif
-
-  if l:cur_line ==# '' && (matchend(l:next_line, '"{*') - 1) == 1
-    return 0
-  endif
-
-  return '='
-endfunction
-
-" Custom fold text, adapted from https://vi.stackexchange.com/a/3818/15292
-" and https://vi.stackexchange.com/a/6608/15292
-function! utils#MyFoldText() abort
-  let l:line = getline(v:foldstart)
-  let l:fold_line_num = v:foldend - v:foldstart
-  let l:fold_text = substitute(l:line, '^"{\+', '', 'g')
-  let l:fill_char_num = &textwidth - len(l:fold_text) - len(l:fold_line_num) - 10
-  return printf('+%s%s %s (%s L)', repeat('-', 4), l:fold_text, repeat('-', l:fill_char_num), l:fold_line_num)
-endfunction
-
-" Toggle cursor column
-function! utils#ToggleCursorCol() abort
-  if &cursorcolumn
-    set nocursorcolumn
-    echo 'cursorcolumn: OFF'
-  else
-    set cursorcolumn
-    echo 'cursorcolumn: ON'
-  endif
 endfunction
 
 function! utils#SwitchLine(src_line_idx, direction) abort
