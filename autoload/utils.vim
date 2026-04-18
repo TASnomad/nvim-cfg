@@ -29,6 +29,7 @@ function! utils#HasColorscheme(name) abort
   return !empty(globpath(&runtimepath, l:pat))
 endfunction
 
+" FIXME: deprecated
 function! utils#SwitchLine(src_line_idx, direction) abort
   if a:direction ==# 'up'
     if a:src_line_idx == 1
@@ -43,6 +44,7 @@ function! utils#SwitchLine(src_line_idx, direction) abort
   endif
 endfunction
 
+" FIXME: deprecated
 function! utils#MoveSelection(direction) abort
   " only do this if previous mode is visual line mode. Once we press some keys in
   " visual line mode, we will leave this mode. So the output of `mode()` will be

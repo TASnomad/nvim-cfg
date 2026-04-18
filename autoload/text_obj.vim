@@ -1,3 +1,4 @@
+" FIXME: deprecated
 function! text_obj#URL() abort
   if match(&runtimepath, 'vim-highlighturl') != -1
     " Note that we use https://github.com/itchyny/vim-highlighturl to get the URL pattern.
@@ -53,6 +54,7 @@ function! text_obj#URL() abort
   normal! gv
 endfunction
 
+" FIXME: deprecated
 function! text_obj#MdCodeBlock(type) abort
   " the parameter type specify whether it is inner text objects or around
   " text objects.
@@ -77,6 +79,7 @@ function! text_obj#MdCodeBlock(type) abort
   execute 'normal! `<V`>'
 endfunction
 
+" FIXME: deprecated
 function! text_obj#Buffer() abort
   let buf_num = bufnr()
 
