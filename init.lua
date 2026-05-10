@@ -38,11 +38,13 @@ local core_conf_files = {
     "globals.lua",
     "options.lua",
     "autocommands.lua",
+    "usercommands.lua",
     "mappings.lua",
     "plugins.lua",
 }
 
 local vim_conf_dir = vim.fn.stdpath("config") .. "/viml_conf"
+
 for _, f in ipairs(core_conf_files) do
     if vim.endswith(f, "vim") then
         local p = string.format("%s/%s", vim_conf_dir, f)

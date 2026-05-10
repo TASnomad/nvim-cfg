@@ -50,12 +50,17 @@ local servers = {
     bashls = {},
     graphql = {},
     -- ruby_lsp = {},
-    rust_analyzer = {},
+    rust_analyzer = {
+        cargo = {
+            features = "all", -- Enable all features
+        }
+    },
     jsonls = {},
     ts_ls = {},
     vimls = {},
     buf_ls = {},
     clangd = {},
+    zls = {},
 }
 
 
