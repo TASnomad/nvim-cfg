@@ -65,12 +65,6 @@ local plugin_specs = {
     },
     {
         "nvim-treesitter/nvim-treesitter",
-        enabled = function()
-            if vim.g.is_mac then
-                return true
-            end
-            return false
-        end,
         event = "VeryLazy",
         build = ":TSUpdate",
         config = function()
@@ -125,11 +119,20 @@ local plugin_specs = {
     },
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.8",
+        version = "*",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-symbols.nvim",
         },
+        config = function()
+            require("telescope").setup({
+                defaults = {
+                    preview = {
+                        treesitter = false
+                    }
+                }
+            })
+        end
     },
     {
         "numToStr/FTerm.nvim",

@@ -6,5 +6,6 @@ if vim.version().minor >= 12 then
     end, { desc = "Show LSP logs" })
 
     vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", { desc = "Show LSP info" })
-    vim.api.nvim_create_user_command("LspRestart", "lsp restart", { desc = "Show LSP info" })
+    vim.api.nvim_create_user_command("LspRestart", "lsp restart", { desc = "Restart LSP server" })
+    vim.api.nvim_create_user_command("LspStart", "lsp enable", { desc = "Start LSP server" })
 end
