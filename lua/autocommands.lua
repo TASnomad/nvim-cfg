@@ -74,12 +74,38 @@ vim.api.nvim_create_autocmd({ "BufRead" }, {
     end
 })
 
+
+local custom_highlight_group = vim.api.nvim_create_augroup('custom_highlight', { clear = true })
+vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+    pattern = '*',
+    group = custom_highlight_group,
+    -- Define or override some highlight groups
+    callback = function()
+        local highlights = {
+            -- For yank highlight
+            YankColor   = { fg = "#6CB6EB", bg = "#D38AEA", bold = true },
+            -- For cursor colors
+            Cursor      = { bold = true, guibg = "#00C918", guifg = "black" },
+            Cursor2     = { fg = "red", bg = "red" },
+            -- For floating window border
+            FloatBorder = { fg = "LightGreen", bg = "NONE" },
+            -- For matching parentheses
+            MatchParen  = { bold = true, underline = true },
+        }
+
+        for group, opts in ipairs(highlights) do
+            vim.api.nvim_set_hl(0, group, opts)
+        end
+    end
+})
+
 -- highlight yanked region, see `:h lua-highlight`
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function()
-        vim.highlight.on_yank { higroup = "YankColor", timeout = 300, on_visual = false }
+        -- We can use YankColor
+        vim.highlight.on_yank { higroup = "YankColor", timeout = 300 }
     end
 })
 
@@ -153,29 +179,5 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
         end
 
         vim.cmd("normal! g`\"zvzz")
-    end
-})
-
-local custom_highlight_group = vim.api.nvim_create_augroup('custom_highlight', { clear = true })
-vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-    pattern = '*',
-    group = custom_highlight_group,
-    -- Define or override some highlight groups
-    callback = function()
-        local highlights = {
-            -- For yank highlight
-            YankColor   = { ctermfg = 59, ctermbg = 41, fg = "#34495E", bg = "#2ECC71" },
-            -- For cursor colors
-            Cursor      = { bold = true, guibg = "#00c918", guifg = "black" },
-            Cursor2     = { fg = "red", bg = "red" },
-            -- For floating window border
-            FloatBorder = { fg = "LightGreen", bg = "NONE" },
-            -- For matching parentheses
-            MatchParen  = { bold = true, underline = true },
-        }
-
-        for group, opts in ipairs(highlights) do
-            vim.api.nvim_set_hl(0, group, opts)
-        end
     end
 })
