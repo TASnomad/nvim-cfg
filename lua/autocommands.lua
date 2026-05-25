@@ -39,7 +39,7 @@ local numbertoggle_group = vim.api.nvim_create_augroup('numbertoggle', { clear =
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
     group = numbertoggle_group,
     pattern = '*',
-    command = 'if &nu | set rnu   | endif'
+    command = 'if &nu | set rnu  | endif'
 })
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
     group = numbertoggle_group,
@@ -105,7 +105,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function()
         -- We can use YankColor
-        vim.highlight.on_yank { higroup = "YankColor", timeout = 300 }
+        vim.highlight.on_yank { higroup = "IncSearch", timeout = 300 }
     end
 })
 
