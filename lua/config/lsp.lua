@@ -51,6 +51,9 @@ local servers = {
     graphql = {},
     -- ruby_lsp = {},
     rust_analyzer = {
+        check = {
+            command = "clippy",
+        },
         cargo = {
             features = "all", -- Enable all features
         }
