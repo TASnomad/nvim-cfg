@@ -125,4 +125,17 @@ function M.add_pack(name)
   return status
 end
 
+function M.multi_edit(patterns)
+  for _, pattern in ipairs(patterns) do
+    local files = fn.glob(pattern, false, true)
+    for _, file in ipairs(files) do
+      vim.cmd("edit " .. file)
+    end
+  end
+end
+
+function M.iso_time(timestamp)
+  return os.date("%Y-%m-%d %H:%M:%S%z", timestamp or os.time())
+end
+
 return M

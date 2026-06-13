@@ -43,6 +43,7 @@ local core_conf_files = {
     "plugins.lua",
 }
 
+-- FIXME: Not used anymore
 local vim_conf_dir = vim.fn.stdpath("config") .. "/viml_conf"
 
 for _, f in ipairs(core_conf_files) do
