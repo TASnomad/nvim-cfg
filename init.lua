@@ -3,7 +3,7 @@ vim.loader.enable()
 local version = vim.version
 
 -- Allowing all versions between 0.11.x & 0.12.x
-local expected_ver = version.range("0.11 - 0.12")
+local expected_ver = version.range("0.12")
 local current_ver = version()
 
 ---@diagnostic disable-next-line: need-check-nil, invisible
@@ -19,7 +19,7 @@ end
 
 --  Config specific to neovide
 if vim.g.neovide then
-    vim.o.guifont = "JetBrainsMono Nerd Font Mono:h12"
+    vim.o.guifont = "JetBrainsMono Nerd Font Mono:h14"
     vim.g.neovide_opacity = 1.0
     vim.g.neovide_cursor_animation_length = 0.1
     vim.g.neovide_cursor_trail_size = 0.3
