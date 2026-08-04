@@ -1,4 +1,3 @@
-local fn = vim.fn
 local api = vim.api
 local utils = require("utils")
 
@@ -24,9 +23,9 @@ vim.g.did_install_default_menus = 1
 
 if utils.executable('python3') then
     if vim.g.is_win then
-        vim.g.python3_host_prog = fn.substitute(fn.exepath("python3"), ".exe$", '', 'g')
+        vim.g.python3_host_prog = vim.fn.substitute(vim.fn.exepath("python3"), ".exe$", '', 'g')
     else
-        vim.g.python3_host_prog = fn.exepath("python3")
+        vim.g.python3_host_prog = vim.fn.expand("$HOME/.local/bin/pynvim-python") or vim.fn.exepath("python3")
     end
 else
     api.nvim_echo({ { "Python3 executable not found! You must install Python3 and set its PATH correctly!" } }, true,
