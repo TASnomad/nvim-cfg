@@ -33,10 +33,6 @@ local plugin_specs = {
             require("config.nvim-cmp")
         end,
     },
-    {
-        "SirVer/ultisnips",
-        event = "InsertEnter",
-    },
     "folke/neoconf.nvim",
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
