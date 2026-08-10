@@ -103,8 +103,10 @@ local plugin_specs = {
         config = function()
             require("config.bufferline")
         end,
+        dependencies = 'nvim-tree/nvim-web-devicons'
     },
     -- better UI for some nvim actions
+    -- FIXME: archived repository
     { "stevearc/dressing.nvim" },
     { "akinsho/git-conflict.nvim", version = "*", config = true },
     {
@@ -122,13 +124,7 @@ local plugin_specs = {
             "nvim-telescope/telescope-symbols.nvim",
         },
         config = function()
-            require("telescope").setup({
-                defaults = {
-                    preview = {
-                        treesitter = false
-                    }
-                }
-            })
+            require("telescope").setup({})
         end
     },
     {
@@ -299,9 +295,9 @@ local plugin_specs = {
         end,
     },
     {
-        "sainnhe/edge",
+        "folke/tokyonight.nvim",
         config = function()
-            vim.cmd("colorscheme edge")
+            vim.cmd("colorscheme tokyonight-storm")
         end
     },
     {
