@@ -40,20 +40,12 @@ local core_conf_files = {
     "autocommands.lua",
     "usercommands.lua",
     "mappings.lua",
-    "plugins.lua",
+    "lazy_setup.lua",
+    "abbrevs.lua",
 }
 
--- FIXME: Not used anymore
-local vim_conf_dir = vim.fn.stdpath("config") .. "/viml_conf"
-
 for _, f in ipairs(core_conf_files) do
-    if vim.endswith(f, "vim") then
-        local p = string.format("%s/%s", vim_conf_dir, f)
-        local cmd = "source " .. p
-        vim.cmd(cmd)
-    else
-        local m, _ = string.gsub(f, "%.lua", "")
-        package.loaded[m] = nil
-        require(m)
-    end
+    local m, _ = string.gsub(f, "%.lua", "")
+    package.loaded[m] = nil
+    require(m)
 end
