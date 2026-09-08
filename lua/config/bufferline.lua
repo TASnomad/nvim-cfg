@@ -6,7 +6,6 @@ require("bufferline").setup {
         left_mouse_command = "buffer %d",
         middle_mouse_command = nil,
         indicator = {
-            -- icon = "▎", -- this should be omitted if indicator style is not 'icon'
             style = "underline",
         },
         -- buffer_close_icon = "",
@@ -33,7 +32,7 @@ require("bufferline").setup {
 
             return true
         end,
-        show_buffer_icons = false,
+        show_buffer_icons = true,
         show_buffer_close_icons = true,
         show_close_icon = true,
         show_tab_indicators = true,

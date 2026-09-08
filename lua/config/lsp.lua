@@ -49,14 +49,15 @@ local servers = {
     biome = {},
     bashls = {},
     graphql = {},
-    -- ruby_lsp = {},
     rust_analyzer = {
-        check = {
-            command = "clippy",
+        ["rust-analyzer"] = {
+            check = {
+                command = "clippy",
+            },
+            cargo = {
+                features = "all", -- Enable all features
+            },
         },
-        cargo = {
-            features = "all", -- Enable all features
-        }
     },
     jsonls = {},
     ts_ls = {},
@@ -89,6 +90,38 @@ local function merge(t1, t2)
     return r
 end
 
+local diagnostic_float_group = vim.api.nvim_create_augroup("lsp_diagnostic_float", { clear = true })
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = diagnostic_float_group,
+    callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local float_opts = {
+            bufnr = bufnr,
+            focusable = false,
+            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+            border = "rounded",
+            source = "always",
+            prefix = " ",
+            scope = "cursor"
+        }
+        if not vim.b.diagnostics_pos then
+            vim.b.diagnostics_pos = { nil, nil }
+        end
+        local cursor_pos = vim.api.nvim_win_get_cursor(0)
+        if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2])
+            and #vim.diagnostic.get(bufnr) > 0 then
+            local win_list = vim.fn.win_findbuf(bufnr)
+            for _, win in ipairs(win_list) do
+                if vim.api.nvim_win_get_config(win).relative ~= "" then
+                    return -- Skipping, since we have a floating window already present
+                end
+            end
+            vim.diagnostic.open_float(float_opts)
+        end
+        vim.b.diagnostics_pos = cursor_pos
+    end
+})
+
 local custom_attach = function(client, bufnr)
     -- Mappings.
     local opts = { silent = true, buffer = bufnr, noremap = true }
@@ -96,7 +129,6 @@ local custom_attach = function(client, bufnr)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, merge(opts, { desc = "go to definition" }))
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, merge(opts, { desc = "go to declaration" }))
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, merge(opts, { desc = "go to implementation" }))
-    -- vim.keymap.set("n", "<C-]>", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, merge(opts, { desc = "Show information" }))
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, merge(opts, { desc = "Show signature" }))
     vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
@@ -112,26 +144,13 @@ local custom_attach = function(client, bufnr)
     end, merge(opts, { desc = "Go to next issue" }))
     vim.keymap.set("n", "<leader>q", function() vim.diagnostic.setqflist({ open = true }) end,
         merge(opts, { desc = "Show diagnostics in quickfix list" }))
-    -- vim.keymap.set("n", "<space>q", function() vim.diagnostic.setloclist({open = true}) end, merge(opts, { desc = "Show diagnostics in loclist list" }))
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, merge(opts, { desc = "Show LSP actions" }))
-
-    -- vim.keymap.set("n", "<leader>ce", function()
-    --     vim.diagnostic.open_float({
-    --         border = "rounded",
-    --         source = true,
-    --         header = "",
-    --         prefix = "",
-    --         focusable = false
-    --     })
-    -- end, merge(opts, { desc = "Show all LSP diagnostics" }))
 
     if vim.lsp.inlay_hint then
         vim.keymap.set('n', '<leader>L', function()
-            if vim.lsp.inlay_hint.is_enabled() then
-                vim.lsp.inlay_hint.enable(false, { bufnr })
-            else
-                vim.lsp.inlay_hint.enable(true, { bufnr })
-            end
+            local filter = { bufnr = bufnr }
+            local enabled = vim.lsp.inlay_hint.is_enabled(filter)
+            vim.lsp.inlay_hint.enable(not enabled, filter)
         end, merge(opts, { desc = "Toggle inlay hints" }))
     end
 
@@ -153,42 +172,15 @@ local custom_attach = function(client, bufnr)
         dap.set_exception_breakpoints({ "all" })
     end, { desc = "Set Exception Breakpoints" })
 
-    vim.api.nvim_create_autocmd("CursorHold", {
-        buffer = bufnr,
-        callback = function()
-            local float_opts = {
-                focusable = false,
-                close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-                border = "rounded",
-                source = "always",
-                prefix = " ",
-                scope = "cursor"
-            }
-            if not vim.b.diagnostics_pos then
-                vim.b.diagnostics_pos = { nil, nil }
-            end
-            local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
-                local win_list = vim.fn.win_findbuf(bufnr)
-                for _, win in ipairs(win_list) do
-                    if vim.api.nvim_win_get_config(win).relative ~= "" then
-                        return -- Skipping, since we have a floating window already present
-                    end
-                end
-                vim.diagnostic.open_float(nil, float_opts)
-            end
-            vim.b.diagnostics_pos = cursor_pos
-        end
-    })
     -- Set some key bindings conditional on server capabilities
     if client.server_capabilities.documentFormattingProvider then
         vim.keymap.set("n", "<space>f", function()
-            vim.lsp.buf.format({ async = false })
+            vim.lsp.buf.format({ async = false, id = client.id })
         end, opts)
     end
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.keymap.set("x", "<space>f", function()
-            vim.lsp.buf.format({ async = false })
+            vim.lsp.buf.format({ async = false, id = client.id })
         end, opts)
     end
 
@@ -217,7 +209,7 @@ require("neoconf").setup({})
 require("mason").setup()
 
 mason_lspconfig.setup({
-    automatic_enable = true,
+    automatic_enable = false,
     ensure_installed = vim.tbl_keys(servers),
 })
 
@@ -226,7 +218,6 @@ for k, v in pairs(servers) do
         capabilities = capabilities,
         on_attach = custom_attach,
         settings = v,
-        filetypes = (v or {}).filetypes,
     })
     vim.lsp.enable(k)
 end
@@ -245,17 +236,11 @@ vim.diagnostic.config({
             return icons[diagnostic.severity] or "■"
         end,
         format = function(diagnostic)
-            -- Simply showing message
-            -- return diagnostic.message
             return string.format("%s [%s]", diagnostic.message, diagnostic.source)
         end,
         source = "if_many",
-        -- serverity = {
-        --     min = vim.diagnostic.severity.HINT,
-        -- }
     },
     -- Gutter signs
-    -- signs = true,
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = "●",

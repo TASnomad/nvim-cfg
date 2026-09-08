@@ -16,7 +16,6 @@ require("bqf").setup {
       end
       return ret
     end
-    -- auto_preview = true,
   },
   func_map = {
     drop = 'o',
