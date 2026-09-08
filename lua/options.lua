@@ -118,7 +118,7 @@ vim.opt.listchars = {
 }
 
 vim.o.title = true
-vim.o.titlestring = "%{utils#Get_titlestr()}"
+vim.o.titlestring = "%{v:lua.require('utils').get_titlestr()}"
 
 -- Persistent undo even after you close a file and re-open it
 vim.o.undofile = true
@@ -216,8 +216,6 @@ vim.o.wrap = false
 --
 vim.opt.foldenable = false
 vim.opt.foldtext = "v:lua.require('my_fold').custom_fold_text()"
--- vim.opt.foldtext = "CustomFoldText()"
 --
 vim.opt_local.foldmethod = "expr"
-vim.opt_local.foldexpr = "v:lua.require('my_fold')get_fold_position(v:lnum)"
--- vim.opt_local.foldexpr = "GetFoldPosition(v:lnum)"
+vim.opt_local.foldexpr = "v:lua.require('my_fold').get_fold_position(v:lnum)"

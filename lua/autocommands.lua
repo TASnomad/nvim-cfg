@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
             -- For yank highlight
             YankColor   = { fg = "#6CB6EB", bg = "#D38AEA", bold = true },
             -- For cursor colors
-            Cursor      = { bold = true, guibg = "#00C918", guifg = "black" },
+            Cursor      = { bold = true, bg = "#00C918", fg = "black" },
             Cursor2     = { fg = "red", bg = "red" },
             -- For floating window border
             FloatBorder = { fg = "LightGreen", bg = "NONE" },
@@ -93,7 +93,7 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
             MatchParen  = { bold = true, underline = true },
         }
 
-        for group, opts in ipairs(highlights) do
+        for group, opts in pairs(highlights) do
             vim.api.nvim_set_hl(0, group, opts)
         end
     end

@@ -3,7 +3,7 @@ require("bqf").setup {
   auto_resize_height = true,
   preview = {
     border = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' },
-    should_preview_cb = function(bufnr, qwinid)
+    should_preview_cb = function(bufnr)
       local ret = true
       local bufname = vim.api.nvim_buf_get_name(bufnr)
       local fsize = vim.fn.getfsize(bufname)

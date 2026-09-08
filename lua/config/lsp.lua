@@ -180,21 +180,20 @@ local custom_attach = function(client, bufnr)
             vim.b.diagnostics_pos = cursor_pos
         end
     })
-    --
-    -- if client.server_capabilities.documentFormattingProvider then
-    --     vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
-    -- end
-
     -- Set some key bindings conditional on server capabilities
-    if client.server_capabilities.document_formatting then
-        vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting_sync, opts)
+    if client.server_capabilities.documentFormattingProvider then
+        vim.keymap.set("n", "<space>f", function()
+            vim.lsp.buf.format({ async = false })
+        end, opts)
     end
-    if client.server_capabilities.document_range_formatting then
-        vim.keymap.set("x", "<space>f", vim.lsp.buf.range_formatting, opts)
+    if client.server_capabilities.documentRangeFormattingProvider then
+        vim.keymap.set("x", "<space>f", function()
+            vim.lsp.buf.format({ async = false })
+        end, opts)
     end
 
     -- The blow command will highlight the current variable and its usages in the buffer.
-    if client.server_capabilities.document_highlight then
+    if client.server_capabilities.documentHighlightProvider then
         vim.cmd([[
         hi! link LspReferenceRead Visual
         hi! link LspReferenceText Visual

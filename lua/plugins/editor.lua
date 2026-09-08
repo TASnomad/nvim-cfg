@@ -97,7 +97,7 @@ return {
             },
             {
                 "<leader>cs",
-                "<cmd>Trouble symbols foucs=false<cr>",
+                "<cmd>Trouble symbols focus=false<cr>",
                 desc = "Symbols (Trouble)"
             },
             {
@@ -107,12 +107,12 @@ return {
             },
             {
                 "<leader>xL",
-                "<leader>Trouble loclist toggle<cr>",
+                "<cmd>Trouble loclist toggle<cr>",
                 desc = "Location list (Trouble)"
             },
             {
                 "<leader>xQ",
-                "<leader>Trouble qflist toggle<cr>",
+                "<cmd>Trouble qflist toggle<cr>",
                 desc = "Quickfix list (Trouble)"
             }
         }

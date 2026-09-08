@@ -1,12 +1,21 @@
--- FIXME: Might be worth checking why there is no "s" when using this package on darwin system
-local pkg_name = "nvim-treesitter.config"
--- vim.g.is_mac and "nvim-treesitter.configs" or 
+if vim.fn.executable("tree-sitter") == 1 then
+    require("nvim-treesitter").install({
+        "python", "cpp", "lua", "vim", "rust", "go", "json", "heex", "eex", "css", "elixir", "html",
+    })
+else
+    vim.schedule(function()
+        vim.notify(
+            "tree-sitter CLI not found in PATH; parser installation skipped. Install tree-sitter CLI (on macOS: brew install tree-sitter).",
+            vim.log.levels.WARN,
+            { title = "Treesitter" }
+        )
+    end)
+end
 
-require(pkg_name).setup({
-    ensure_installed = { "python", "cpp", "lua", "vim", "rust", "go", "json", "jsonc", "heex", "eex", "css", "elixir", "html" },
-    ignore_install = {}, -- List of parsers to ignore installing
-    highlight = {
-        enable = true,   -- false will disable the whole extension
-        disable = {},    -- list of language that will be disabled
-    },
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("treesitter_highlight", { clear = true }),
+    callback = function(args)
+        -- Parsers may be unavailable or still installing.
+        pcall(vim.treesitter.start, args.buf)
+    end,
 })

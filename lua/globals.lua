@@ -25,7 +25,9 @@ if utils.executable('python3') then
     if vim.g.is_win then
         vim.g.python3_host_prog = vim.fn.substitute(vim.fn.exepath("python3"), ".exe$", '', 'g')
     else
-        vim.g.python3_host_prog = vim.fn.expand("$HOME/.local/bin/pynvim-python") or vim.fn.exepath("python3")
+        local python_host = vim.fn.expand("$HOME/.local/bin/pynvim-python")
+        vim.g.python3_host_prog =
+            utils.executable(python_host) and python_host or vim.fn.exepath("python3")
     end
 else
     api.nvim_echo({ { "Python3 executable not found! You must install Python3 and set its PATH correctly!" } }, true,
@@ -44,10 +46,9 @@ vim.g.vimsyn_embed = 'l'
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_liststyle = 3
 
 if vim.g.is_win then
-    vim.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
+    vim.g.netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
 end
 
 
@@ -72,7 +73,3 @@ vim.g.loaded_sql_completion = 1
 -- vim-mundo
 vim.g.mundo_verbose_graph = 0
 vim.g.mundo_width = 80
-
--- vim-signify
-vim.g.signify_vcs_list = { "git" }
-vim.g.signify_sign_change = "~"
