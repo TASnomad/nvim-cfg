@@ -27,9 +27,10 @@ return {
                 },
 
                 mux = {
-                    enabled = vim.fn.executable("tmux") == 1,
-                    backend = "tmux",
-                    create = "terminal",
+                    -- Keep the session in Neovim's terminal: hiding the pane preserves it,
+                    -- but quitting Neovim ends it. Use /resume in Codex after restarting
+                    -- to restore the conversation, not any previously running task.
+                    enabled = false,
                 },
             },
         },
