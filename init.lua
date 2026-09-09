@@ -2,17 +2,15 @@ vim.loader.enable()
 
 local version = vim.version
 
--- Allowing all versions between 0.11.x & 0.12.x
+-- Allowing all versions 0.12.x
 local expected_ver = version.range("0.12")
+---@cast expected_ver vim.VersionRange
 local current_ver = version()
-
----@diagnostic disable-next-line: need-check-nil, invisible
 local result_ver = expected_ver:has(current_ver)
 
 if result_ver == false then
     local _v = string.format("%s.%s.%s", current_ver.major, current_ver.minor, current_ver.patch)
     local msg = string.format("Expect nvim v[from '%s' - to: '%s'], but got %s instead. You're on your own!",
-        ---@diagnostic disable-next-line: need-check-nil
         expected_ver.from, expected_ver.to, _v)
     vim.api.nvim_echo({ { msg } }, true, { err = true })
 end
