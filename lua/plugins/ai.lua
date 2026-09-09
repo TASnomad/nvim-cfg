@@ -1,9 +1,17 @@
+local function available_cli()
+    if vim.fn.executable("codex") == 1 then
+        return "codex"
+    elseif vim.fn.executable("cursor-agent") == 1 then
+        return "cursor"
+    end
+end
+
 return {
     {
         "folke/sidekick.nvim",
 
         cond = function()
-            return vim.fn.executable("codex") == 1
+            return available_cli() ~= nil
         end,
 
         dependencies = {
@@ -40,11 +48,11 @@ return {
                 "<leader>aa",
                 function()
                     require("sidekick.cli").toggle({
-                        name = "codex",
+                        name = available_cli(),
                         focus = true,
                     })
                 end,
-                desc = "AI: Toggle Codex",
+                desc = "AI: Toggle assistant",
             },
             {
                 "<leader>as",
