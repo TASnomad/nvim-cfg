@@ -1,6 +1,7 @@
 if vim.fn.executable("tree-sitter") == 1 then
     require("nvim-treesitter").install({
-        "python", "cpp", "lua", "vim", "rust", "go", "json", "heex", "eex", "css", "elixir", "html",
+        "python", "cpp", "lua", "vim", "rust", "go", "json", "heex", "eex", "css", "elixir", "html", "typescript",
+        "javascript"
     })
 else
     vim.schedule(function()

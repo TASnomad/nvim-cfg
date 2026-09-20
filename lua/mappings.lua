@@ -185,11 +185,3 @@ keymap.set("n", "<leader>fr", function() require('telescope.builtin').oldfiles()
 keymap.set("n", "<leader>tv", "<cmd>TodoTrouble<cr>", {
     desc = "List all TODOs"
 })
-
-keymap.set('n', "<leader>pp", "<cmd>Telescope neovim-project discover<cr>", {
-    desc = "List all projects found"
-})
-
-keymap.set('n', "<leader>pr", "<cmd>Telescope neovim-project<cr>", {
-    desc = "List recent projects"
-})

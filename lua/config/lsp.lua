@@ -46,6 +46,9 @@ local servers = {
     },
     dockerls = {},
     docker_compose_language_service = {},
+    denols = {
+        root_markers = { "deno.json", "deno.jsonc" }
+    },
     biome = {},
     bashls = {},
     graphql = {},
@@ -60,7 +63,19 @@ local servers = {
         },
     },
     jsonls = {},
-    ts_ls = {},
+    ts_ls = {
+        single_file_support = false,
+        root_markers = function(path)
+            local has_node = vim.fs.root(path, { "package.json", "tsconfig.json", ".git" })
+            local has_deno = vim.fs.root(path, { "deno.json", "deno.jsonc" })
+
+            if has_node and not has_deno then
+                return has_node
+            end
+
+            return nil
+        end
+    },
     vimls = {},
     buf_ls = {},
     clangd = {},
