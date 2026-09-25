@@ -1,6 +1,8 @@
 local function available_cli()
     if vim.fn.executable("codex") == 1 then
         return "codex"
+    elseif vim.fn.executable("claude") == 1 then
+        return "claude"
     elseif vim.fn.executable("cursor-agent") == 1 then
         return "cursor"
     end
