@@ -138,4 +138,12 @@ return {
             require("config.fidget-nvim")
         end,
     },
+    {
+        "wakatime/vim-wakatime",
+        lazy = false,
+        enabled = function()
+            local isPresent = os.getenv("ENABLED_WAKATIME")
+            return isPresent ~= nil
+        end
+    }
 }
