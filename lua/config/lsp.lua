@@ -15,12 +15,16 @@ local servers = {
     pylsp = {
         pylsp = {
             plugins = {
-                pylint = { enabled = true, executable = "pylint" },
-                pyflakes = { enabled = false },
+                -- Keep basic error checks; enable heavier tools per project when needed.
+                pyflakes = { enabled = true },
+                pylint = { enabled = false },
                 pycodestyle = { enabled = false },
+                pydocstyle = { enabled = false },
+                mccabe = { enabled = false },
+                flake8 = { enabled = false },
                 jedi_completion = { fuzzy = true },
-                pyls_isort = { enabled = true },
-                pylsp_mypy = { enabled = true },
+                pyls_isort = { enabled = false },
+                pylsp_mypy = { enabled = false },
             },
         }
     },
@@ -68,6 +72,29 @@ local servers = {
     buf_ls = {},
     clangd = {},
 }
+
+local function configure_pylsp_venv(_, config)
+    local candidates = {}
+    if config.root_dir then
+        candidates = {
+            vim.fs.joinpath(config.root_dir, ".venv"),
+            vim.fs.joinpath(config.root_dir, "venv"),
+        }
+    end
+    if vim.env.VIRTUAL_ENV and vim.env.VIRTUAL_ENV ~= "" then
+        table.insert(candidates, vim.fn.fnamemodify(vim.env.VIRTUAL_ENV, ":p"))
+    end
+
+    for _, venv in ipairs(candidates) do
+        local python = vim.fs.joinpath(venv, "bin", "python")
+        if vim.fn.executable(python) == 1 then
+            -- Point Jedi at project dependencies while keeping Mason's pylsp.
+            local plugins = config.settings.pylsp.plugins
+            plugins.jedi = vim.tbl_deep_extend("force", plugins.jedi or {}, { environment = python })
+            return
+        end
+    end
+end
 
 
 -- NOTE: only configuring nix LSP on nix machines
@@ -220,6 +247,7 @@ for k, v in pairs(servers) do
     vim.lsp.config(k, {
         capabilities = capabilities,
         on_attach = custom_attach,
+        before_init = k == "pylsp" and configure_pylsp_venv or nil,
         settings = v,
     })
     vim.lsp.enable(k)
